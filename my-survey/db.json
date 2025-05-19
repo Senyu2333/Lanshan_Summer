@@ -1,0 +1,7 @@
+{
+    "user": [
+      {
+        "id": 1,"username": "管理员","password": "A123456a","token": "fake-token"
+      }
+    ]
+}
