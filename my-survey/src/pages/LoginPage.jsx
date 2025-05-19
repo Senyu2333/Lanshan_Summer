@@ -3,8 +3,7 @@ import {useSelector, useDispatch} from 'react-redux'
 import {useForm} from "react-hook-form";
 import {loginAsync} from "../store/authSlice.js";
 import {useNavigate} from "react-router-dom";
-import {unwrapResult} from "@reduxjs/toolkit";
-
+import {Helmet} from "react-helmet";
 export default function LoginPage() {
     const dispatch=useDispatch();
     const navigate = useNavigate();
@@ -21,11 +20,14 @@ export default function LoginPage() {
         });
     };
         if(token){
-            navigate('/');
+            navigate('/surveylist');
             return null;
         }
     return(
         <div style={{textAlign:'center'}}>
+            <Helmet>
+                <title>登录页</title>
+            </Helmet>
             <h1>登录页</h1>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div>

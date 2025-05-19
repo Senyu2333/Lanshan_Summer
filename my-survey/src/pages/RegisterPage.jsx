@@ -1,13 +1,13 @@
 import React from "react";
 import Helmet from 'react-helmet';
-export default function ForbiddenPage() {
+export default function RegisterPage() {
     return (
         <div style={{textAlign:'center'}}>
             <Helmet>
-                <title>Forbidden</title>
+                <title>注册页</title>
             </Helmet>
-            <h1>403</h1>
-            <p>抱歉，你无权访问此页面。</p>
+                <h1>注册页</h1>
         </div>
+
     )
 }
