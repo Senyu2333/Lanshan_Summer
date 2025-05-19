@@ -10,3 +10,19 @@ Mock.mock('/api/login','post',({body})=>{
         }
     }
 })
+Mock.mock('/api/register','post',({body})=>{
+    const {username}=JSON.parse(body);
+    if (username==="taken"){
+        return{code:1,message:"用户名已被占用"}
+    }
+    return {
+        code:0,
+        data:{
+            id:Mock.mock('@guid'),
+            username,
+            token:'fake-token'
+        }
+    }
+
+
+})

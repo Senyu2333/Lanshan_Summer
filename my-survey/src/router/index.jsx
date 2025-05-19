@@ -17,6 +17,7 @@ export default function AppRouter(){
             <Route path="403" element={<ForbiddenPage />}/>
             <Route path="*" element={<NotFoundPage/> }/>
             <Route path="/register" element={<RegisterPage/> }/>
+            <Route path="/login" element={<LoginPage/> }/>
             <Route path="/write/:id" element={<SurveyWritePage />} />
             <Route path="/edit/:id?" element={<SurveyEditorPage />} />
             <Route path="/result/:id" element={<SurveyResultPage />} />

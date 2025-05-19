@@ -1,10 +1,20 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {login as loginApi} from '../api'
+import {login ,register} from '../api'
+export const registerAsync=createAsyncThunk(
+    'auth/register',
+    async (creds,{rejectWithValue}) => {
+        const res = await register(creds);
+        if(res.code!==0){
+            return rejectWithValue(res.message)
+        }
+        return res.data;
+    }
+)
 
 export const loginAsync=createAsyncThunk(
     'auth/login',
     async (creds,{rejectWithValue}) => {
-        const res=await loginApi(creds);
+        const res=await login(creds);
         if(res.code!==0){
             return rejectWithValue(res.message);
         }
@@ -28,13 +38,23 @@ const slice = createSlice({
     },
     extraReducers(builder){
         builder
-        .addCase(loginAsync.pending,s => {s.loading=true;s.error=null})
+            .addCase(registerAsync.pending,s =>{s.loding=true;s.error=null})
+            .addCase(registerAsync.fulfilled,(s,a)=>{
+                s.loading=false;
+                s.user=a.payload;
+                s.token=a.payload.token;
+            })
+            .addCase(registerAsync.rejected,(s,a)=>{
+                s.loading=false;
+                s.error=a.payload||a.error.message;
+            })
+            .addCase(loginAsync.pending,s => {s.loading=true;s.error=null})
             .addCase(loginAsync.fulfilled,(s,a) => {
                 s.loading=false;
                 s.user=a.payload;
                 s.token=a.payload.token;
             })
-        .addCase(loginAsync.rejected,(s,a) => {
+            .addCase(loginAsync.rejected,(s,a) => {
             s.loading=false;
             s.error=a.payload||a.error.message;
         });
