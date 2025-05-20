@@ -1,7 +1,15 @@
 {
-    "user": [
-      {
-        "id": 1,"username": "管理员","password": "A123456a","token": "fake-token"
-      }
-    ]
+  "users": [
+    {
+      "id": "1",
+      "username": "管理员",
+      "password": "A123456a",
+      "token": "fake-token"
+    },
+    {
+      "id": "d86d",
+      "username": "武宇恒",
+      "password": "Abc12345"
+    }
+  ]
 }

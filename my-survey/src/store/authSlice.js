@@ -38,7 +38,7 @@ const slice = createSlice({
     },
     extraReducers(builder){
         builder
-            .addCase(registerAsync.pending,s =>{s.loding=true;s.error=null})
+            .addCase(registerAsync.pending,s =>{s.loading=true;s.error=null})
             .addCase(registerAsync.fulfilled,(s,a)=>{
                 s.loading=false;
                 s.user=a.payload;

@@ -13,7 +13,8 @@ export default function RegisterPage() {
     const {register,handleSubmit,watch,formState:{errors}} = useForm();
     const password=watch('password','');
     const onSubmit=data=>{
-        dispatch(registerAsync(data))
+        const {username,password} = data
+        dispatch(registerAsync({username,password}))
             .unwrap()
         .then(()=>{
             navigate('/surveylist');
