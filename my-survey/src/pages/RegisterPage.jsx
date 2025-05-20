@@ -9,15 +9,15 @@ import {registerAsync} from "../store/authSlice.js";
 export default function RegisterPage() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const {loading,token}=useSelector(state=>state.auth);
+    const {loading,token,error}=useSelector(state=>state.auth);
     const {register,handleSubmit,watch,formState:{errors}} = useForm();
     const password=watch('password','');
     const onSubmit=data=>{
-        const {username,password} = data
+        const {username,password} = data;
         dispatch(registerAsync({username,password}))
             .unwrap()
         .then(()=>{
-            navigate('/surveylist');
+            navigate('/login');
         })
         .catch(msg=>{
             console.log('注册失败',msg);
@@ -51,6 +51,7 @@ export default function RegisterPage() {
                 <button type="submit" disabled={loading}>
                     {loading?'提交中...':'注册'}
                 </button>
+                {error && <p style={{ color: 'red' }}>{error}</p>}
             </form>
         </div>
 
