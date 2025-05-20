@@ -24,4 +24,21 @@ export default function SingleChoice({question,onChange,onDelete}) {
     const optionClick=opt=>{
         onChange({...question,answer:opt})
     }
+    return(
+        <div>
+            <button title="删除此题">🗑️</button>
+            <input placeholder="请输入题干信息"/>
+            <div>
+                {question.options.map((option,id)=>(
+                    <div key={id}>
+                        <input type='radio'/>
+                        <input type='text'/>
+                        <button title='删除选项'>✖️</button>
+                    </div>
+                ))}
+                    <button title="增加选项">➕</button>
+            </div>
+        </div>
+
+    )
 }
