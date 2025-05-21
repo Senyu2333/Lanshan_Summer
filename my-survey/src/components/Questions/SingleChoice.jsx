@@ -26,17 +26,17 @@ export default function SingleChoice({question,onChange,onDelete}) {
     }
     return(
         <div>
-            <button title="删除此题">🗑️</button>
-            <input placeholder="请输入题干信息"/>
+            <button title="删除此题" onClick={onDelete}>🗑️</button>
+            <input placeholder="请输入题干信息" onChange={titleChange}/>
             <div>
-                {question.options.map((option,id)=>(
+                {question.options.map((opt,id)=>(
                     <div key={id}>
-                        <input type='radio'/>
-                        <input type='text'/>
-                        <button title='删除选项'>✖️</button>
+                        <input type='radio' checked={question.answer===opt} onChange={()=>optionClick(opt)}/>
+                        <input type='text' onChange={e=>optionChange(id,e.target.value)}/>
+                        <button title='删除选项' onClick={()=>optionDelete(id)}>✖️</button>
                     </div>
                 ))}
-                    <button title="增加选项">➕</button>
+                    <button title="增加选项" onClick={optionAdd}>➕</button>
             </div>
         </div>
 
