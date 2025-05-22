@@ -38,3 +38,15 @@ export async function login(credentials) {
         return { code: 1, message: '登录失败，请重试' }
     }
 }
+
+/**
+ * 创建问卷
+ * @param {Object} survey  完整的问卷对象
+ * @returns {Promise<{code:0,data:any}|{code:1,message:string}>}
+ */
+export function createSurvey(survey) {
+    return axios
+        .post('/surveys', survey)
+        .then(res => ({ code: 0, data: res.data }))
+        .catch(err => ({ code: 1, message: err.message }));
+}
