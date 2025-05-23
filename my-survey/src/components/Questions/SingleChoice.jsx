@@ -12,8 +12,8 @@ export default function SingleChoice({question,onChange,onDelete}) {
     }
 
     const optionDelete=id=>{
-        const opts=question.options.filter(option=>option.id !== id);
-        const answer=opts.includes(question.answer?question.answer:null);
+        const opts=question.options.filter((_,i)=>i!== id);
+        const answer=opts.includes(question.answer)?question.answer:'';
         onChange({...question,options:opts,answer});
     }
 
@@ -27,7 +27,7 @@ export default function SingleChoice({question,onChange,onDelete}) {
     return(
         <div>
             <button title="删除此题" onClick={onDelete}>🗑️</button>
-            <input placeholder="请输入题干信息" onChange={titleChange}/>
+            <textarea placeholder="请输入题干信息" onChange={titleChange}/>
             <div>
                 {question.options.map((opt,id)=>(
                     <div key={id}>

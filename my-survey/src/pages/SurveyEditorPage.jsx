@@ -1,7 +1,7 @@
 import React, {useState} from "react"
 import Helmet from 'react-helmet'
 import SingleChoice from "../components/Questions/SingleChoice.jsx";
-import { createSurvey } from '../api';
+
 import { useNavigate } from 'react-router-dom';
 export default function SurveyEditorPage() {
     const navigate = useNavigate();
@@ -39,9 +39,14 @@ export default function SurveyEditorPage() {
                 <button>定位题</button>
             </div>
 
-            {questions.map((question, index) => (
+            {questions.map((question) => (
                 <div key={question.id}>
-                    {question.type === 'single' && <SingleChoice question={question}/>}
+                    {question.type === 'single' &&
+                          <SingleChoice question={question} onChange={newQuestion=>{
+                              setQuestions(prev =>prev.map(e=>e.id===newQuestion.id?newQuestion:e))}}
+                              onDelete={() => setQuestions(prev =>prev.filter(e=>e.id!==question.id))}
+                          />}
+                    {question.options.length < 2 && alert('单选题至少需要两个答案！')}
                 </div>
             ))}
             {questions.length === 0 && <p>开始增加问题</p>}
