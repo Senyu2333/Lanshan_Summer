@@ -31,7 +31,8 @@ export default function SingleChoice({question,onChange,onDelete}) {
             <div>
                 {question.options.map((opt,id)=>(
                     <div key={id}>
-                        <input type='radio' checked={question.answer===opt} onChange={()=>optionClick(opt)}/>
+                        <span>{String.fromCharCode(65 + id)}</span>
+                        <input type='radio' checked={question.answer===id}  onChange={()=>optionClick(id)}/>
                         <input type='text' onChange={e=>optionChange(id,e.target.value)}/>
                         <button title='删除选项' onClick={()=>optionDelete(id)}>✖️</button>
                     </div>
