@@ -1,21 +1,40 @@
-import React, {useState} from "react"
+import React, {useState,useEffect} from "react"
 import Helmet from 'react-helmet'
 import SingleChoice from "../components/Questions/SingleChoice.jsx";
+import FillBlank from "../components/Questions/FillBlank.jsx";
 export default function SurveyEditorPage() {
     const [title, setTitle] = useState('');
     const [questions, setQuestions] = useState([]);
-    const addSingleChoice = (type) => {
-
+    const addSingleChoice = () => {
         const newQuestion = {
             id: Date.now(),
-            type,
+            type:'single',
             title: '',
             options: ['', '','',''],
             answer: null
         }
         setQuestions(prev => [...prev, newQuestion])
     }
-
+    useEffect(() => {
+        questions.forEach(question=>{
+            if(question.type === 'single'){
+                if(question.options.length < 2){
+                    alert('单选题答案不宜小于两个！')
+                }else if(question.options.length > 26){
+                    alert('单选题答案不宜大于二十六个！')
+                }
+            }
+        })
+    })
+    const addFillBlank = () => {
+        const newQuestion = {
+            id: Date.now(),
+            type:'blank',
+            title: '',
+            answer: null
+        }
+        setQuestions(prev => [...prev, newQuestion])
+    }
     return (
         <div style={{textAlign: 'center'}}>
             <Helmet>
@@ -28,9 +47,9 @@ export default function SurveyEditorPage() {
             </div>
             <div>
                 <span>增加题目</span>
-                <button onClick={() => addSingleChoice('single')}>单选题</button>
+                <button onClick={() => addSingleChoice()}>单选题</button>
                 <button>多选题</button>
-                <button>填空题</button>
+                <button  onClick={()=>addFillBlank()}>填空题</button>
                 <button>打分题</button>
                 <button>下拉框题</button>
                 <button>定位题</button>
@@ -43,8 +62,11 @@ export default function SurveyEditorPage() {
                               setQuestions(prev =>prev.map(e=>e.id===newQuestion.id?newQuestion:e))}}
                               onDelete={() => setQuestions(prev =>prev.filter(e=>e.id!==question.id))}
                           />}
-                    {question.options.length < 2 && alert('单选题答案不宜小于两个！')}
-                    {question.options.length > 26 && alert('单选题答案不宜大于二十六个！')}
+                    {question.type ==='blank' &&
+                        <FillBlank question={question} onChange={newQuestion=>{
+                            setQuestions(prev =>prev.filter(e=>e.id!==newQuestion.id))}}
+                                   onDelete={()=>setQuestions(prev =>prev.filter(e=>e.id!==question.id))}
+                        />}
                 </div>
             ))}
             {questions.length === 0 && <p>开始增加问题</p>}
