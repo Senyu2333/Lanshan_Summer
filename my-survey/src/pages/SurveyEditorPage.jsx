@@ -2,6 +2,7 @@ import React, {useState,useEffect} from "react"
 import Helmet from 'react-helmet'
 import SingleChoice from "../components/Questions/SingleChoice.jsx";
 import FillBlank from "../components/Questions/FillBlank.jsx";
+import Score from "../components/Questions/Score.jsx";
 export default function SurveyEditorPage() {
     const [title, setTitle] = useState('');
     const [questions, setQuestions] = useState([]);
@@ -35,6 +36,15 @@ export default function SurveyEditorPage() {
         }
         setQuestions(prev => [...prev, newQuestion])
     }
+    const addScore=()=>{
+        const newQuestion = {
+            id: Date.now(),
+            type:'score',
+            title: '',
+            cells:['']
+        }
+        setQuestions(prev => [...prev, newQuestion])
+    }
     return (
         <div style={{textAlign: 'center'}}>
             <Helmet>
@@ -50,7 +60,7 @@ export default function SurveyEditorPage() {
                 <button onClick={() => addSingleChoice()}>单选题</button>
                 <button>多选题</button>
                 <button  onClick={()=>addFillBlank()}>填空题</button>
-                <button>打分题</button>
+                <button onClick={()=>addScore()}>打分题</button>
                 <button>下拉框题</button>
                 <button>定位题</button>
             </div>
@@ -67,6 +77,16 @@ export default function SurveyEditorPage() {
                             setQuestions(prev =>prev.filter(e=>e.id!==newQuestion.id))}}
                                    onDelete={()=>setQuestions(prev =>prev.filter(e=>e.id!==question.id))}
                         />}
+                    {questions.map(question => (
+                        <div key={question.id}>
+                            {question.type === "score" && (
+                                <Score question={question} onChange={updated =>
+                            setQuestions(prev => prev.map(q => (q.id === updated.id ? updated : q)))}
+                                  onDelete={() =>
+                                        setQuestions(prev => prev.filter(q => q.id !== question.id))}
+                        />)}
+                        </div>
+                    ))}
                 </div>
             ))}
             {questions.length === 0 && <p>开始增加问题</p>}
