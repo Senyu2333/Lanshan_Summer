@@ -36,6 +36,7 @@ export default function Score({ question, onChange, onDelete }) {
                 onClick={onDelete}
                 title="删除此题"
                 style={{ float: "right", cursor: "pointer" }}
+                type="button"
             >
                 🗑️
             </button>
@@ -61,7 +62,7 @@ export default function Score({ question, onChange, onDelete }) {
                                 <input type="text" value={cell} placeholder={`第 ${idx + 1} 格`}
                                     onChange={e => changeCell(idx, e.target.value)}
                                     style={{ width: 60, border: "none", outline: "none" }}/>
-                                <button onClick={() => removeCell(idx)} title="删除本列" style={{ marginLeft: 4, cursor: "pointer" }}>
+                                <button type={'button'} onClick={() => removeCell(idx)} title="删除本列" style={{ marginLeft: 4, cursor: "pointer" }}>
                                     ✖️
                                 </button>
                             </td>
@@ -71,6 +72,7 @@ export default function Score({ question, onChange, onDelete }) {
                                 onClick={addCell}
                                 title="增加一格"
                                 style={{ cursor: "pointer" }}
+                                type={'button'}
                             >
                                 ➕
                             </button>

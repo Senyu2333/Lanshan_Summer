@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {login ,register} from '../api'
+import {login ,register,createSurvey} from '../api'
 export const registerAsync=createAsyncThunk(
     'auth/register',
     async (creds,{rejectWithValue}) => {
@@ -22,6 +22,16 @@ export const loginAsync=createAsyncThunk(
     }
 )
 
+export const createAsync=createAsyncThunk(
+    'auth/commit',
+    async (e,{rejectWithValue}) => {
+        const res=await createSurvey(e);
+        if(res.code!==0){
+            return rejectWithValue(res.message)
+        }
+        return res.data
+    }
+)
 const slice = createSlice({
     name:'auth',
     initialState:{
@@ -56,8 +66,14 @@ const slice = createSlice({
             })
             .addCase(loginAsync.rejected,(s,a) => {
             s.loading=false;
-            s.error=a.payload||a.error.message;
-        });
+            s.error=a.payload||a.error.message;})
+            .addCase(createAsync.pending,s =>{s.loading=true;s.error=null})
+            .addCase(createAsync.fulfilled,(s,a) => {
+                s.loading=false;
+                s.user=a.payload;
+                s.token=a.payload.token;
+            })
+
     }
 });
 export const {logout}=slice.actions;

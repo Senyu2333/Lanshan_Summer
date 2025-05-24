@@ -7,7 +7,7 @@ export default function FillBlank({question,onChange,onDelete}) {
 
     return (
         <div>
-            <button title="删除此题" onClick={onDelete}>🗑️</button>
+            <button title="删除此题" type={'button'} onClick={onDelete}>🗑️</button>
             <textarea placeholder="请输入题干信息" onChange={titleChange}/>
             <div>
                 <textarea></textarea>
