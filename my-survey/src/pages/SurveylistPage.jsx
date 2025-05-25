@@ -24,7 +24,7 @@ export default function ServeylistPage(){
             <ul>
                 {surveys.map(survey=>(
                     <li key={survey.id}>
-                        <h2>{survey.title}</h2>
+                        <h2 className='cursor-pointer'>{survey.title}</h2>
                     </li>
                 ))}
             </ul>
