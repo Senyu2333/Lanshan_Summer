@@ -14,8 +14,40 @@
     }
   ],
   "surveys": [
-
+    {
+      "id": "2053",
+      "title": "test0",
+      "question": [
+        {
+          "id": 1748147738091,
+          "type": "single",
+          "title": "1",
+          "options": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ],
+          "answer": null
+        },
+        {
+          "id": 1748147745829,
+          "type": "blank",
+          "title": "2",
+          "answer": null
+        },
+        {
+          "id": 1748147747919,
+          "type": "score",
+          "title": "3",
+          "cells": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ]
+        }
       ]
-
-
+    }
+  ]
 }
