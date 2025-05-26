@@ -24,8 +24,17 @@ export const loginAsync=createAsyncThunk(
 
 export const createAsync=createAsyncThunk(
     'auth/commit',
-    async (e,{rejectWithValue}) => {
-        const res=await createSurvey(e);
+    async (e,{rejectWithValue,getState}) => {
+
+        const {user}=getState().auth;
+        if(!user){
+            return rejectWithValue("用户未登录!");
+        }
+        const updatedUser={
+            ...e,
+            creator:user.username,
+        }
+        const res=await createSurvey(updatedUser);
         if(res.code!==0){
             return rejectWithValue(res.message)
         }
@@ -38,7 +47,8 @@ const slice = createSlice({
         user:null,
         token:null,
         loading:false,
-        error:null
+        error:null,
+        surveys:[]
     },
     reducers:{
         logout(state){
@@ -72,8 +82,12 @@ const slice = createSlice({
                 s.loading=false;
                 s.user=a.payload;
                 s.token=a.payload.token;
+                s.surveys.push(action.payload);
             })
-
+            .addCase(createAsync.rejected,(s,a) => {
+                s.loading=false;
+                s.error=a.payload||a.error.message;
+            })
     }
 });
 export const {logout}=slice.actions;

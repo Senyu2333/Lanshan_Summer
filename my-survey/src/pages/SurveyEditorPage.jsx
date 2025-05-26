@@ -25,7 +25,9 @@ export default function SurveyEditorPage() {
                  .catch(err => {
                      console.error("提交失败", err);
                      alert("创建问卷失败，请重试");
-                        });};
+                        });
+    console.log()
+    };
 
     const addSingleChoice = () => {
         const newQuestion = {
