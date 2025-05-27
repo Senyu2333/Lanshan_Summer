@@ -105,6 +105,7 @@ const SurveylistPage = () => {
                                 >查看</button>
                                 <button 
                                     type='button'
+                                    onClick={()=>setSurvey(prev=>prev.filter(e=>e.id!==survey.id))}
                                     style={{
                                         flex: 1,
                                         padding: '0.5rem 0.75rem',

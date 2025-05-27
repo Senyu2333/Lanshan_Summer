@@ -48,20 +48,7 @@ const SurveyWritePage = () => {
     }
     
     if (!survey) {
-        return (
-            <div style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                minHeight: '100vh',
-                backgroundColor: '#f3f4f6'
-            }}>
-                <p style={{
-                    fontSize: '1.125rem',
-                    color: '#dc2626'
-                }}>未找到该问卷</p>
-            </div>
-        );
+        navigate('*')
     }
     
     return (
