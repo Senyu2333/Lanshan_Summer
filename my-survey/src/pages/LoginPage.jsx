@@ -11,6 +11,7 @@ export default function LoginPage() {
     const navigate = useNavigate();
     const {loading,error,token} = useSelector((state) => state.auth);
     const {register, handleSubmit} = useForm();
+    
     const onSubmit=data=>{
         dispatch(loginAsync(data))
         .unwrap()
@@ -22,32 +23,125 @@ export default function LoginPage() {
             console.log("登录失败",msg);
         });
     };
+    
     useEffect(()=>{
         console.log('当前 token:', token);
         if(token){
             navigate('/surveylist',{ replace: true });
         }
     },[token, navigate])
+    
     return(
-        <div style={{textAlign:'center'}}>
+        <div style={{
+            minHeight: '100vh',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#f3f4f6',
+            padding: '2rem'
+        }}>
             <Helmet>
                 <title>登录页</title>
             </Helmet>
-            <h1>登录页</h1>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <div>
-                    <label>用户名：</label>
-                    <input {...register('username')} required/>
-                </div>
-                <div>
-                    <label>密码：</label>
-                    <input {...register('password')} required/>
-                </div>
-                <button type="submit" disabled={loading}>
-                    {loading?'加载中':'登录'}
-                </button>
+            
+            <div style={{
+                backgroundColor: 'white',
+                padding: '2rem',
+                borderRadius: '1rem',
+                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                width: '100%',
+                maxWidth: '400px'
+            }}>
+                <h1 style={{
+                    fontSize: '1.875rem',
+                    fontWeight: 'bold',
+                    textAlign: 'center',
+                    marginBottom: '2rem',
+                    color: '#111827'
+                }}>登录</h1>
+                
+                <form onSubmit={handleSubmit(onSubmit)} style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '1.5rem'
+                }}>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.5rem'
+                    }}>
+                        <label style={{
+                            fontSize: '0.875rem',
+                            fontWeight: '500',
+                            color: '#374151'
+                        }}>用户名</label>
+                        <input 
+                            {...register('username')} 
+                            required
+                            style={{
+                                padding: '0.75rem',
+                                border: '1px solid #d1d5db',
+                                borderRadius: '0.5rem',
+                                outline: 'none',
+                                transition: 'border-color 0.2s'
+                            }}
+                        />
+                    </div>
+                    
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.5rem'
+                    }}>
+                        <label style={{
+                            fontSize: '0.875rem',
+                            fontWeight: '500',
+                            color: '#374151'
+                        }}>密码</label>
+                        <input 
+                            {...register('password')} 
+                            type="password"
+                            required
+                            style={{
+                                padding: '0.75rem',
+                                border: '1px solid #d1d5db',
+                                borderRadius: '0.5rem',
+                                outline: 'none',
+                                transition: 'border-color 0.2s'
+                            }}
+                        />
+                    </div>
+                    
+                    <button 
+                        type="submit" 
+                        disabled={loading}
+                        style={{
+                            padding: '0.75rem',
+                            backgroundColor: loading ? '#9ca3af' : '#3b82f6',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '0.5rem',
+                            fontWeight: '500',
+                            cursor: loading ? 'not-allowed' : 'pointer',
+                            transition: 'background-color 0.2s'
+                        }}
+                    >
+                        {loading ? '登录中...' : '登录'}
+                    </button>
                 </form>
-                {error&&<p style={{color:'red'}}>错误：{error}</p>}
+                
+                {error && (
+                    <p style={{
+                        color: '#dc2626',
+                        fontSize: '0.875rem',
+                        marginTop: '1rem',
+                        textAlign: 'center'
+                    }}>
+                        错误：{error}
+                    </p>
+                )}
+            </div>
         </div>
     );
 }

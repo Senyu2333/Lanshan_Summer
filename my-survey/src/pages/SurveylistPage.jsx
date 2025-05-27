@@ -1,45 +1,143 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {Helmet} from 'react-helmet'
 import Axios from 'axios'
-import {useEffect} from 'react'
 import {useNavigate} from 'react-router-dom'
-export default function ServeylistPage(){
+import {useSelector, useDispatch} from 'react-redux'
+
+const SurveylistPage = () => {
     const [surveys, setSurvey] = useState([])
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    
     useEffect(()=>{
         Axios.get('http://localhost:3000/surveys')
             .then(res=>{
                 setSurvey(res.data)
-        })
+            })
             .catch(err=>{
                 console.log(err)
             })
     },[])
+    
     return (
-
-      <div className="text-center">
-          <Helmet>
-              <title>问卷列表</title>
-          </Helmet>
-          <h1>问卷列表</h1>
-          <button type={'button'} onClick={()=>navigate('/edit')}>创建问卷</button>
-          <form>
-            <ul>
-                {surveys.map(survey=>(
-                    <li key={survey.id} className="bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 p-6 flex flex-col justify-between border border-gray-200">
-                             <div>
-                             <h2 className='text-xl font-semibold text-gray-900 dark:text-gray-100 cursor-pointer'>{survey.title}</h2>
-                             <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">创建人:{survey.creator}</p>
-                             </div>
-                        <div className="mt-4 flex space-x-2">
-                        <button type='button' className="flex-1 px-3 py-1 border rounded-lg text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition" onClick={()=>navigate(`/write/${survey.id}`)}>查看</button>
-                        <button type='button' className="flex-1 px-3 py-1 border rounded-lg text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900 transition">删除</button>
-                        <button type='button' className="flex-1 px-3 py-1 border rounded-lg text-sm text-green-600 hover:bg-green-50 dark:hover:bg-green-900 transition">结果</button>
-                        </div>
-                    </li>
-                ))}
-            </ul>
-          </form>
-      </div>
+        <div style={{
+            textAlign: 'center',
+            padding: '2rem'
+        }}>
+            <Helmet>
+                <title>问卷列表</title>
+            </Helmet>
+            <h1 style={{
+                fontSize: '2rem',
+                fontWeight: 'bold',
+                marginBottom: '2rem'
+            }}>问卷列表</h1>
+            
+            <button 
+                type={'button'} 
+                onClick={()=>navigate('/edit')}
+                style={{
+                    padding: '0.75rem 2rem',
+                    backgroundColor: '#3b82f6',
+                    color: 'white',
+                    borderRadius: '0.75rem',
+                    border: 'none',
+                    marginBottom: '2rem',
+                    cursor: 'pointer',
+                    transition: 'background-color 0.2s'
+                }}
+            >
+                创建问卷
+            </button>
+            
+            <form>
+                <ul style={{
+                    listStyle: 'none',
+                    padding: 0,
+                    display: 'grid',
+                    gap: '1rem',
+                    maxWidth: '800px',
+                    margin: '0 auto'
+                }}>
+                    {surveys.map(survey=>(
+                        <li key={survey.id} style={{
+                            backgroundColor: 'white',
+                            borderRadius: '1rem',
+                            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                            padding: '1.5rem',
+                            border: '1px solid #e5e7eb',
+                            transition: 'box-shadow 0.3s',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'space-between',
+                            gap: '1rem'
+                        }}>
+                            <div>
+                                <h2 style={{
+                                    fontSize: '1.25rem',
+                                    fontWeight: '600',
+                                    color: '#111827',
+                                    marginBottom: '0.5rem',
+                                    cursor: 'pointer'
+                                }}>{survey.title}</h2>
+                                <p style={{
+                                    fontSize: '0.875rem',
+                                    color: '#6b7280'
+                                }}>创建人: {survey.creator}</p>
+                            </div>
+                            <div style={{
+                                display: 'flex',
+                                gap: '0.5rem'
+                            }}>
+                                <button 
+                                    type='button' 
+                                    onClick={()=>navigate(`/write/${survey.id}`)}
+                                    style={{
+                                        flex: 1,
+                                        padding: '0.5rem 0.75rem',
+                                        border: '1px solid #d1d5db',
+                                        borderRadius: '0.5rem',
+                                        fontSize: '0.875rem',
+                                        backgroundColor: 'white',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.2s'
+                                    }}
+                                >查看</button>
+                                <button 
+                                    type='button'
+                                    style={{
+                                        flex: 1,
+                                        padding: '0.5rem 0.75rem',
+                                        border: '1px solid #d1d5db',
+                                        borderRadius: '0.5rem',
+                                        fontSize: '0.875rem',
+                                        color: '#dc2626',
+                                        backgroundColor: 'white',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.2s'
+                                    }}
+                                >删除</button>
+                                <button 
+                                    type='button'
+                                    style={{
+                                        flex: 1,
+                                        padding: '0.5rem 0.75rem',
+                                        border: '1px solid #d1d5db',
+                                        borderRadius: '0.5rem',
+                                        fontSize: '0.875rem',
+                                        color: '#059669',
+                                        backgroundColor: 'white',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.2s'
+                                    }}
+                                >结果</button>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            </form>
+        </div>
     );
 }
+
+export default SurveylistPage;
