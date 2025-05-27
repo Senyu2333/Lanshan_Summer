@@ -2,13 +2,9 @@ import React, {useState, useEffect} from 'react'
 import {Helmet} from 'react-helmet'
 import Axios from 'axios'
 import {useNavigate} from 'react-router-dom'
-import {useSelector, useDispatch} from 'react-redux'
-
 const SurveylistPage = () => {
     const [surveys, setSurvey] = useState([])
     const navigate = useNavigate();
-    const dispatch = useDispatch();
-    
     useEffect(()=>{
         Axios.get('http://localhost:3000/surveys')
             .then(res=>{
@@ -18,6 +14,17 @@ const SurveylistPage = () => {
                 console.log(err)
             })
     },[])
+    const surveyDelete=async(id)=>{
+        const confirmDelete=window.confirm("⚠️ 确定要删除这个问卷吗？删除后将无法恢复！")
+        if(!confirmDelete) return
+        try{
+            await Axios.delete(`http://localhost:3000/surveys/${id}`)
+            setSurvey(prev=>prev.filter(e=>e.id!==id))
+            alert(`问卷已经删除`)
+        }catch(err){
+            console.log(err)
+        }
+    }
     
     return (
         <div style={{
@@ -105,7 +112,7 @@ const SurveylistPage = () => {
                                 >查看</button>
                                 <button 
                                     type='button'
-                                    onClick={()=>setSurvey(prev=>prev.filter(e=>e.id!==survey.id))}
+                                    onClick={()=>surveyDelete(survey.id)}
                                     style={{
                                         flex: 1,
                                         padding: '0.5rem 0.75rem',
