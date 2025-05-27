@@ -4,6 +4,8 @@ import {useForm} from "react-hook-form";
 import {loginAsync} from "../store/authSlice.js";
 import {useNavigate} from "react-router-dom";
 import {Helmet} from "react-helmet";
+import {useEffect} from "react";
+
 export default function LoginPage() {
     const dispatch=useDispatch();
     const navigate = useNavigate();
@@ -12,17 +14,20 @@ export default function LoginPage() {
     const onSubmit=data=>{
         dispatch(loginAsync(data))
         .unwrap()
-        .then(()=>{
-            navigate('/');
+        .then((response)=>{
+            console.log('登录成功，响应数据：', response);
+            navigate('/surveylist');
         })
         .catch(msg=>{
             console.log("登录失败",msg);
         });
     };
+    useEffect(()=>{
+        console.log('当前 token:', token);
         if(token){
-            navigate('/surveylist');
-            return null;
+            navigate('/surveylist',{ replace: true });
         }
+    },[token, navigate])
     return(
         <div style={{textAlign:'center'}}>
             <Helmet>

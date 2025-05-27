@@ -1,5 +1,5 @@
 import axios from 'axios'
-axios.defaults.baseURL = '/api'
+axios.defaults.baseURL = 'http://localhost:3000'
 /**
  * 注册
  * @param {{username:string,password:string}} credentials

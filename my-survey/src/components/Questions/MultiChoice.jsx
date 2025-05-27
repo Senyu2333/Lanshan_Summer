@@ -1,5 +1,7 @@
-import React from "react";
-export default function MultiChoice({question,onChange,onDelete}){
+import React, { useState } from "react";
+export default function MultiChoice({question, onChange, onDelete, viewOnly=false}){
+    const [answers, setAnswers] = useState([]);
+    
     const titleChange=e=>{
         onChange({...question,title:e.target.value});
     }
@@ -15,6 +17,41 @@ export default function MultiChoice({question,onChange,onDelete}){
     const optionAdd=()=>{
         onChange({...question,options:[...question.options,'']});
     }
+    
+    const handleCheckboxChange = (id) => {
+        if (viewOnly) {
+            setAnswers(prev => 
+                prev.includes(id) 
+                    ? prev.filter(a => a !== id)
+                    : [...prev, id]
+            );
+        } else {
+            const currentAnswers = Array.isArray(question.answer) ? question.answer : [];
+            const newAnswers = currentAnswers.includes(id)
+                ? currentAnswers.filter(a => a !== id)
+                : [...currentAnswers, id];
+            onChange({...question, answer: newAnswers});
+        }
+    }
+
+    if (viewOnly) {
+        return (
+            <div>
+                {question.options.map((opt,id)=>(
+                    <div key={id} style={{margin: '8px 0'}}>
+                        <label style={{display: 'block'}}>
+                            <input 
+                                type='checkbox' 
+                                checked={answers.includes(id)}
+                                onChange={() => handleCheckboxChange(id)}
+                            />
+                            {' '}{String.fromCharCode(65 + id)}. {opt}
+                        </label>
+                    </div>
+                ))}
+            </div>
+        )
+    }
 
     return (
         <div>
@@ -24,8 +61,12 @@ export default function MultiChoice({question,onChange,onDelete}){
                 {question.options.map((opt,id)=>(
                     <div key={id}>
                         <span>{String.fromCharCode(65 + id)}</span>
-                        <input type='checkbox' checked={question.answer===id}  onChange={(e)=>optionChange(id,e.target.value)}/>
-                        <input type='text' onChange={(e)=>optionChange(id,e.target.value)}/>
+                        <input 
+                            type='checkbox' 
+                            checked={Array.isArray(question.answer) && question.answer.includes(id)}
+                            onChange={() => handleCheckboxChange(id)}
+                        />
+                        <input type='text' value={opt} onChange={(e)=>optionChange(id,e.target.value)}/>
                         <button title='删除选项' type={'button'} onClick={()=>optionDelete(id) }>✖️</button>
                     </div>
                 ))}
@@ -33,5 +74,4 @@ export default function MultiChoice({question,onChange,onDelete}){
             </div>
         </div>
     )
-
 }

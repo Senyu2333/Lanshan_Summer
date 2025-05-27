@@ -1,28 +1,54 @@
 import React from "react";
 
-export default function SingleChoice({question,onChange,onDelete}) {
+export default function SingleChoice({question,onChange,onDelete,viewOnly=false,namePrefix=""}) {
+    const authChange=(up)=>{
+        if(!viewOnly&&onChange){
+            onChange(up);
+        }
+    }
+
     const titleChange=e=>{
-        onChange({...question,title:e.target.value})
+        authChange({...question,title:e.target.value})
     }
 
     const optionChange=(id,text)=>{
         const opts=[...question.options];
         opts[id]=text;
-        onChange({...question,options:opts});
+        authChange({...question,options:opts});
     }
 
     const optionDelete=id=>{
         const opts=question.options.filter((_,i)=>i!== id);
         const answer=opts.includes(question.answer)?question.answer:'';
-        onChange({...question,options:opts,answer});
+        authChange({...question,options:opts,answer});
     }
 
     const optionAdd=()=>{
-        onChange({...question,options:[...question.options,'']});
+        authChange({...question,options:[...question.options,'']});
     }
 
     const optionClick=opt=>{
-        onChange({...question,answer:opt})
+        authChange({...question,answer:opt})
+    }
+
+    if(viewOnly){
+        return(
+            <div>
+                <div>
+                    {question.options.map((opt, idx) => (
+                        <label key={idx} style={{ display: "block", margin: "4px 0" }}>
+                            <input
+                                type="radio"
+                                name={`${namePrefix}-${question.id}`}
+                                checked={question.answer === idx}
+                                disabled
+                            />{" "}
+                            {opt}
+                        </label>
+                    ))}
+                </div>
+            </div>
+        )
     }
     return(
         <div>

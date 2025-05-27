@@ -1,7 +1,12 @@
 import React from "react";
 import {useEffect} from "react";
-export default function Score({ question, onChange, onDelete }) {
+export default function Score({ question, onChange, onDelete,viewOnly=false,namePrefix="" }) {
     const { title = "", cells = [] } = question;
+    const authChange=(up)=>{
+        if(!viewOnly&&onChange){
+            onChange(up);
+        }
+    }
     useEffect(() => {
         if (cells.length > 10) {
             alert("打分题格子不宜超过 10 个！");
@@ -9,27 +14,37 @@ export default function Score({ question, onChange, onDelete }) {
     }, [cells]);
 
     const handleTitleChange = e => {
-        onChange({ ...question, title: e.target.value });
+        authChange({ ...question, title: e.target.value });
     };
 
 
     const addCell = () => {
-        onChange({ ...question, cells: [...cells, ""] });
+        authChange({ ...question, cells: [...cells, ""] });
     };
 
 
     const removeCell = idx => {
         const newCells = cells.filter((_, i) => i !== idx);
-        onChange({ ...question, cells: newCells });
+        authChange({ ...question, cells: newCells });
     };
 
 
     const changeCell = (idx, value) => {
         const newCells = [...cells];
         newCells[idx] = value;
-        onChange({ ...question, cells: newCells });
+        authChange({ ...question, cells: newCells });
     };
-
+    if(viewOnly){
+        return (
+            <div>
+                {questions.options.map((opt, idx) => (
+                    <div key={idx}>
+                        <h2>{opt.title}</h2>
+                    </div>
+                ))}
+            </div>
+        )
+    }
     return (
         <div style={{ border: "1px solid #ddd", padding: 12, marginBottom: 16 }}>
             <button

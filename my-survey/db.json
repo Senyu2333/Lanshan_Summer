@@ -18,7 +18,7 @@
       "id": "2053",
       "title": "test0",
       "creator": "武宇恒",
-      "question": [
+      "questions": [
         {
           "id": 1748147738091,
           "type": "single",
@@ -54,7 +54,7 @@
       "id": "8f80",
       "title": "test1",
       "creator": "武宇恒",
-      "question": [
+      "questions": [
         {
           "id": 1748226472496,
           "type": "single",
