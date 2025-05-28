@@ -175,7 +175,7 @@ export default function SingleChoice({question, onChange, onDelete, viewOnly=fal
                         cursor: 'pointer',
                         transition: 'all 0.2s'
                     }}
-                >➕ 增加选项</button>
+                >➕</button>
             </div>
         </div>
     )

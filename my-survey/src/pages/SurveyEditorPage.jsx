@@ -34,7 +34,7 @@ const SurveyEditorPage = () => {
             type: 'single',
             title: '',
             options: ['', '', '', ''],
-            answer: null  // 用户选择的选项索引
+            answer: null
         }
         setQuestions(prev => [...prev, newQuestion])
     }
@@ -44,7 +44,7 @@ const SurveyEditorPage = () => {
             type: 'multi',
             title: '',
             options: ['', '', '', ''],
-            answer: []  // 用户选择的选项索引数组
+            answer: []
         }
         setQuestions(prev => [...prev, newQuestion])
     }
@@ -70,7 +70,7 @@ const SurveyEditorPage = () => {
             id: Date.now(),
             type: 'blank',
             title: '',
-            answer: ''  // 用户填写的文本
+            answer: ''
         }
         setQuestions(prev => [...prev, newQuestion])
     }

@@ -66,6 +66,7 @@ const SurveylistPage = () => {
                     maxWidth: '800px',
                     margin: '0 auto'
                 }}>
+                    {surveys.length === 0 &&<p>还没有问卷哦</p>}
                     {surveys.map(survey=>(
                         <li key={survey.id} style={{
                             backgroundColor: 'white',
