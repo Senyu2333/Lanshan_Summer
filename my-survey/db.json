@@ -13,6 +13,43 @@
       "token": "lhim43hn"
     }
   ],
-  "surveys": [],
+  "surveys": [
+    {
+      "id": "b073",
+      "title": "测测你对五妹妹的了解程度",
+      "questions": [
+        {
+          "id": 1748435434075,
+          "type": "single",
+          "title": "五妹妹的性别是？",
+          "options": [
+            "男",
+            "女",
+            "未知"
+          ],
+          "answer": null
+        },
+        {
+          "id": 1748435616392,
+          "type": "multi",
+          "title": "选出能描述五妹妹的形容词？",
+          "options": [
+            "骗人精",
+            "卷狗",
+            "砸中",
+            "ai神"
+          ],
+          "answer": []
+        },
+        {
+          "id": 1748435648355,
+          "type": "blank",
+          "title": "你喜欢五妹妹吗？",
+          "answer": ""
+        }
+      ],
+      "creator": "武宇恒"
+    }
+  ],
   "result": []
 }

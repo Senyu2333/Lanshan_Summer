@@ -82,7 +82,7 @@ const slice = createSlice({
                 s.loading=false;
                 s.user=a.payload;
                 s.token=a.payload.token;
-                s.surveys.push(action.payload);
+                s.surveys.push(a.payload);
             })
             .addCase(createAsync.rejected,(s,a) => {
                 s.loading=false;
