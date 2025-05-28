@@ -7,7 +7,7 @@ const Footer = () => {
             width: '100%',
             padding: '1rem 0',
             marginTop: '2rem',
-            backgroundColor: '#f3f4f6' // 对应 bg-gray-100
+            backgroundColor: '#3b82f6'
           }}
       >
         <div
@@ -15,7 +15,7 @@ const Footer = () => {
               maxWidth: '1024px',
               margin: '0 auto',
               textAlign: 'center',
-              color: '#4b5563' // 对应 text-gray-600
+              color: 'white',
             }}
         >
           <p style={{ marginBottom: '0.5rem' }}>Created by Senyu</p>
@@ -29,7 +29,7 @@ const Footer = () => {
           >
             <a
                 href="mailto:1243669851@qq.com"
-                style={{ textDecoration: 'none', color: '#4b5563' }}
+                style={{ textDecoration: 'none', color: 'white' }}
             >
               QQ: 1243669851@qq.com
             </a>
@@ -38,7 +38,7 @@ const Footer = () => {
                 href="https://github.com/Senyu2333"
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ textDecoration: 'none', color: '#4b5563' }}
+                style={{ textDecoration: 'none', color: 'white' }}
             >
               GitHub: @Senyu2333
             </a>
