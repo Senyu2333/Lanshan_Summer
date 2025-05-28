@@ -9,7 +9,7 @@ const Header = ({ username, onLogout }) => {
 
 
     const handleBack = () => {
-        navigate(-1); //
+        navigate(-1);
     };
 
     return showHeader ? (
