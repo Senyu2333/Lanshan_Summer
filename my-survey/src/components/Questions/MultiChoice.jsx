@@ -118,15 +118,7 @@ export default function MultiChoice({question, onChange, onDelete, viewOnly=fals
                             width: '1.75rem',
                             textAlign: 'center'
                         }}>{String.fromCharCode(65 + id)}. </span>
-                        <input 
-                            type='checkbox'
-                            checked={Array.isArray(question.answer) && question.answer.includes(id)}
-                            onChange={() => handleAnswerChange(id)}
-                            style={{
-                                width: '1rem',
-                                height: '1rem'
-                            }}
-                        />
+
                         <input 
                             type='text'
                             value={opt}

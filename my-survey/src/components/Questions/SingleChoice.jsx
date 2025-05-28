@@ -120,17 +120,7 @@ export default function SingleChoice({question, onChange, onDelete, viewOnly=fal
                             width: '1.75rem',
                             textAlign: 'center'
                         }}>{String.fromCharCode(65 + id)}.</span>
-                        <input 
-                            type='radio' 
-                            name={`edit-${question.id}-option`}
-                            checked={question.answer === id}
-                            onChange={() => handleAnswerChange(id)}
-                            style={{
-                                width: '1rem',
-                                height: '1rem',
-                                marginRight: '0.25rem'
-                            }}
-                        />
+
                         <input 
                             type='text' 
                             value={opt} 

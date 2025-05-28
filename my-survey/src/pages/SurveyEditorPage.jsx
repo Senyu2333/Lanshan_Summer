@@ -117,6 +117,7 @@ const SurveyEditorPage = () => {
                     margin: '0 auto',
                     marginBottom: '2rem'
                 }}>
+
                     <input 
                         value={title} 
                         onChange={(e) => setTitle(e.target.value)} 
@@ -176,7 +177,7 @@ const SurveyEditorPage = () => {
                     flexDirection: 'column',
                     gap: '1rem'
                 }}>
-                    {questions.map((question) => (
+                    {questions.map((question,idx) => (
                         <div key={question.id} style={{
                             backgroundColor: 'rgba(249, 250, 251, 0.8)',
                             backdropFilter: 'blur(4px)',
@@ -185,6 +186,15 @@ const SurveyEditorPage = () => {
                             boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
                             border: '1px solid rgba(229, 231, 235, 0.6)'
                         }}>
+                            <span>第{idx+1}题</span>
+                            <span style={{color: '#3b82f6'}}>{question.answer}【{{
+                                single:   '单选题',
+                                multi:    '多选题',
+                                blank:    '填空题',
+                                score:    '打分题',
+                                locate:   '定位题',
+                                dropdown: '下拉框题'
+                            }[question.type]}】</span>
                             {question.type === 'single' &&
                                 <SingleChoice question={question} 
                                     onChange={newQuestion => setQuestions(prev => prev.map(e => e.id === newQuestion.id ? newQuestion : e))}
