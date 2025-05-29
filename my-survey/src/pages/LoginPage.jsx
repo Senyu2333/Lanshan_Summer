@@ -2,7 +2,7 @@ import React from 'react'
 import {useSelector, useDispatch} from 'react-redux'
 import {useForm} from "react-hook-form";
 import {loginAsync} from "../store/authSlice.js";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, Link} from "react-router-dom";
 import {Helmet} from "react-helmet";
 import {useEffect} from "react";
 
@@ -11,7 +11,7 @@ export default function LoginPage() {
     const navigate = useNavigate();
     const {loading,error,token} = useSelector((state) => state.auth);
     const {register, handleSubmit} = useForm();
-    
+
     const onSubmit=data=>{
         dispatch(loginAsync(data))
         .unwrap()
@@ -23,14 +23,17 @@ export default function LoginPage() {
             console.log("登录失败",msg);
         });
     };
-    
+
     useEffect(()=>{
         console.log('当前 token:', token);
         if(token){
+            console.log('跳转到问卷列表页面');
             navigate('/surveylist',{ replace: true });
+        }else{
+            console.log('没有 token，无法跳转');
         }
     },[token, navigate])
-    
+
     return(
         <div style={{
             minHeight: '100vh',
@@ -44,7 +47,7 @@ export default function LoginPage() {
             <Helmet>
                 <title>登录页</title>
             </Helmet>
-            
+
             <div style={{
                 backgroundColor: 'white',
                 padding: '2rem',
@@ -60,7 +63,7 @@ export default function LoginPage() {
                     marginBottom: '2rem',
                     color: '#111827'
                 }}>登录</h1>
-                
+
                 <form onSubmit={handleSubmit(onSubmit)} style={{
                     display: 'flex',
                     flexDirection: 'column',
@@ -76,8 +79,8 @@ export default function LoginPage() {
                             fontWeight: '500',
                             color: '#374151'
                         }}>用户名</label>
-                        <input 
-                            {...register('username')} 
+                        <input
+                            {...register('username')}
                             required
                             style={{
                                 padding: '0.75rem',
@@ -88,7 +91,7 @@ export default function LoginPage() {
                             }}
                         />
                     </div>
-                    
+
                     <div style={{
                         display: 'flex',
                         flexDirection: 'column',
@@ -99,8 +102,8 @@ export default function LoginPage() {
                             fontWeight: '500',
                             color: '#374151'
                         }}>密码</label>
-                        <input 
-                            {...register('password')} 
+                        <input
+                            {...register('password')}
                             type="password"
                             required
                             style={{
@@ -112,9 +115,9 @@ export default function LoginPage() {
                             }}
                         />
                     </div>
-                    
-                    <button 
-                        type="submit" 
+
+                    <button
+                        type="submit"
                         disabled={loading}
                         style={{
                             padding: '0.75rem',
@@ -130,7 +133,20 @@ export default function LoginPage() {
                         {loading ? '登录中...' : '登录'}
                     </button>
                 </form>
-                
+
+                <div style={{
+                    textAlign: 'center',
+                    marginTop: '1rem'
+                }}>
+                    <Link to="/register" style={{
+                        color: '#3b82f6',
+                        textDecoration: 'none',
+                        fontSize: '0.875rem'
+                    }}>
+                        没有账号？去注册
+                    </Link>
+                </div>
+
                 {error && (
                     <p style={{
                         color: '#dc2626',

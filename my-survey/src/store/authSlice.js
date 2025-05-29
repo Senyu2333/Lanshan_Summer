@@ -73,6 +73,7 @@ const slice = createSlice({
                 s.loading=false;
                 s.user=a.payload;
                 s.token=a.payload.token;
+                console.log('登录成功，token:', s.token);
             })
             .addCase(loginAsync.rejected,(s,a) => {
             s.loading=false;
