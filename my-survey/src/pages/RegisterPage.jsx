@@ -4,7 +4,7 @@ import {useForm} from "react-hook-form";
 import {Navigate, useNavigate} from 'react-router-dom';
 import {registerAsync} from "../store/authSlice.js";
 import {Helmet} from "react-helmet";
-
+import {Link} from "react-router-dom";
 const RegisterPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -184,7 +184,20 @@ const RegisterPage = () => {
                         {loading ? '注册中...' : '注册'}
                     </button>
                 </form>
-                
+
+
+                <div style={{
+                    textAlign: 'center',
+                    marginTop: '1rem'
+                }}>
+                    <Link to="/register" style={{
+                        color: '#3b82f6',
+                        textDecoration: 'none',
+                        fontSize: '0.875rem'
+                    }}>
+                        已有账号？去登录
+                    </Link>
+                </div>
                 {error && (
                     <p style={{
                         color: '#dc2626',
