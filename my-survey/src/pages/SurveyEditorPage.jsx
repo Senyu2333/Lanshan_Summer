@@ -187,7 +187,11 @@ const SurveyEditorPage = () => {
                             border: '1px solid rgba(229, 231, 235, 0.6)'
                         }}>
                             <span>第{idx+1}题</span>
-                            <span style={{color: '#3b82f6'}}>{question.answer}【{{
+                            <span style={{color: '#3b82f6'}}>
+                                {question.type === 'locate' && question.answer 
+                                    ? `(${question.answer.latitude.toFixed(6)}, ${question.answer.longitude.toFixed(6)})`
+                                    : question.answer}
+                                【{{
                                 single:   '单选题',
                                 multi:    '多选题',
                                 blank:    '填空题',
