@@ -52,8 +52,8 @@ export default function Locate({ question, onChange, onDelete, viewOnly = false 
             // 更新本地状态
             setCurrentLocation(newLocation)
 
-            // 如果在编辑模式下，更新父组件状态
-            if (!viewOnly && onChange) {
+            // 更新父组件状态
+            if (onChange) {
                 onChange({
                     ...question,
                     answer: newLocation,
@@ -73,8 +73,8 @@ export default function Locate({ question, onChange, onDelete, viewOnly = false 
         })
     }
 
-    // 编辑模式
-    if (!viewOnly) {
+    // 编辑模式（创建问卷时）
+    if (onDelete) {
         return (
             <div>
                 <div style={{
@@ -131,7 +131,7 @@ export default function Locate({ question, onChange, onDelete, viewOnly = false 
         )
     }
 
-    // 答题模式
+    // 答题模式或查看模式
     return (
         <div style={{ margin: '1rem 0' }}>
             <p style={{ 
@@ -139,23 +139,25 @@ export default function Locate({ question, onChange, onDelete, viewOnly = false 
                 fontWeight: '500'
             }}>{question.title}</p>
             
-            <button 
-                onClick={handleLocate} 
-                type="button"
-                style={{
-                    marginBottom: '0.75rem',
-                    padding: '0.5rem 0.75rem',
-                    fontSize: '0.875rem',
-                    color: '#2563eb',
-                    backgroundColor: 'transparent',
-                    borderRadius: '0.375rem',
-                    border: '1px solid #93c5fd',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s'
-                }}
-            >
-                📍 获取当前位置
-            </button>
+            {!viewOnly && (
+                <button 
+                    onClick={handleLocate} 
+                    type="button"
+                    style={{
+                        marginBottom: '0.75rem',
+                        padding: '0.5rem 0.75rem',
+                        fontSize: '0.875rem',
+                        color: '#2563eb',
+                        backgroundColor: 'transparent',
+                        borderRadius: '0.375rem',
+                        border: '1px solid #93c5fd',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s'
+                    }}
+                >
+                    📍 获取当前位置
+                </button>
+            )}
 
             <div
                 ref={mapRef}

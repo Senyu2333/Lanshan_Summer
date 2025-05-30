@@ -39,10 +39,10 @@ const SurveyWritePage = () => {
             });
     },[id])
 
-    const handleAnswerChange = (questionId, answer) => {
+    const handleAnswerChange = (questionId, question) => {
         setAnswers(prev => ({
             ...prev,
-            [questionId]: answer
+            [questionId]: question.answer
         }));
     };
 
@@ -53,11 +53,14 @@ const SurveyWritePage = () => {
         }
         const unansweredQuestions = survey.questions.filter(q => {
             const answer = answers[q.id];
+            if (q.type === 'locate') {
+                return !answer || !answer.latitude || !answer.longitude;
+            }
             return answer === null || (Array.isArray(answer) && answer.length === 0) || answer === '';
         });
 
         if (unansweredQuestions.length > 0) {
-            alert('请回答所有问题后再提交！');
+            alert('请回答所有问题，对于定位题请点击"获取当前位置"按钮！');
             return;
         }
 
@@ -77,11 +80,11 @@ const SurveyWritePage = () => {
                     }
                 ]
             };
-    const finishedSurvey={
+    const finishedSurvey = {
         user: user.username,
-        answers: Object.entries(answers).map(([Id, answer]) => ({
-            id: id,
-            answer:ans
+        answers: Object.entries(answers).map(([questionId, answer]) => ({
+            id: questionId,
+            answer: answer
         }))
     }
 
@@ -174,9 +177,6 @@ const SurveyWritePage = () => {
                             }}>
                                 <span>第{idx+1}题</span>
                                 <span style={{color: '#3b82f6'}}>
-                                {question.type === 'locate' && question.answer
-                                    ? `(${question.answer.latitude.toFixed(6)}, ${question.answer.longitude.toFixed(6)})`
-                                    : question.answer}
                                     【{{
                                     single:   '单选题',
                                     multi:    '多选题',
