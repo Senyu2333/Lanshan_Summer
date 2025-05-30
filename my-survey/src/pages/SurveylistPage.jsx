@@ -4,17 +4,23 @@ import Axios from 'axios'
 import {useNavigate} from 'react-router-dom'
 const SurveylistPage = () => {
     const [surveys, setSurvey] = useState([])
+    const [IsCreator, setIsCreator] = useState(false)
     const navigate = useNavigate();
     useEffect(()=>{
         Axios.get('http://localhost:3000/surveys')
             .then(res=>{
                 setSurvey(res.data)
+                setIsCreator(res.data.creator===user.username)
             })
             .catch(err=>{
                 console.log(err)
             })
     },[])
     const surveyDelete=async(id)=>{
+        if(!IsCreator){
+            alert("⚠️ 你没有权限")
+            return;
+        }
         const confirmDelete=window.confirm("⚠️ 确定要删除这个问卷吗？删除后将无法恢复！")
         if(!confirmDelete) return
         try{
