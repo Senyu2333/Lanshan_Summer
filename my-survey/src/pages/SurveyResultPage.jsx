@@ -1,6 +1,18 @@
-import React from 'react'
+import React, {useState} from 'react'
 import Helmet from 'react-helmet'
+import Axios from 'axios'
+import {useEffect} from "react";
 export default function SurveyResultPage() {
+    const [surveyResult, setSurveyResult] = useState({});
+    useEffect(() => {
+        Axios.get('http://localhost:3000/surveys')
+        .then(res=>{
+            setSurveyResult(res.data);
+        })
+            .catch(err=>{
+                console.log(err)
+            })
+    },[])
     return (
         <div style={{textAlign:'center'}}>
             <Helmet>

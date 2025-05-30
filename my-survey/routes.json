@@ -1,0 +1,8 @@
+{
+  "/surveys/:id/submit": {
+    "POST": {
+      "target": "/surveys/:id",
+      "method": "PATCH"
+    }
+  }
+} 

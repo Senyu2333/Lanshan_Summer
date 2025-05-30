@@ -11,6 +11,12 @@
       "username": "wyh",
       "password": "123456",
       "token": "lhim43hn"
+    },
+    {
+      "id": "eb53",
+      "username": "zzx",
+      "password": "123456",
+      "token": "4aodx29j"
     }
   ],
   "surveys": [
@@ -26,8 +32,7 @@
             "男",
             "女",
             "未知"
-          ],
-          "answer": null
+          ]
         },
         {
           "id": 1748435616392,
@@ -38,18 +43,39 @@
             "卷狗",
             "砸中",
             "ai神"
-          ],
-          "answer": []
+          ]
         },
         {
           "id": 1748435648355,
           "type": "blank",
-          "title": "你喜欢五妹妹吗？",
-          "answer": ""
+          "title": "你喜欢五妹妹吗？"
         }
       ],
-      "creator": "wyh"
+      "creator": "wyh",
+      "results": [
+        {
+          "user": "zzx",
+          "answers": [
+            {
+              "id": "1748435434075",
+              "answer": 1
+            },
+            {
+              "id": "1748435616392",
+              "answer": [
+                0,
+                1,
+                2,
+                3
+              ]
+            },
+            {
+              "id": "1748435648355",
+              "answer": "喜欢"
+            }
+          ]
+        }
+      ]
     }
-  ],
-  "result": []
+  ]
 }

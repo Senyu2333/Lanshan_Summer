@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from "react"
 import {useParams, useNavigate} from "react-router-dom"
-import {useSelector, useDispatch} from "react-redux"
-
+import {useSelector} from "react-redux"
 import {Helmet} from "react-helmet"
 import Axios from "axios";
 import FillBlank from "../components/Questions/FillBlank.jsx";
@@ -10,17 +9,28 @@ import MultiChoice from "../components/Questions/MultiChoice.jsx";
 import Score from "../components/Questions/Score.jsx";
 import SingleChoice from "../components/Questions/SingleChoice.jsx";
 
+// 设置axios默认配置
+Axios.defaults.baseURL = 'http://localhost:3000';
+
 const SurveyWritePage = () => {
     const {id} = useParams();
     const navigate = useNavigate();
-    const dispatch = useDispatch();
+    const user = useSelector(state => state.auth.user);
     const [survey, setSurvey] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [answers, setAnswers] = useState({});
+    const [submitting, setSubmitting] = useState(false);
     
     useEffect(() => {
-        Axios.get(`http://localhost:3000/surveys/${id}`)
+        Axios.get(`/surveys/${id}`)
             .then((res)=> {
                 setSurvey(res.data);
+                // 初始化answers对象
+                const initialAnswers = {};
+                res.data.questions.forEach(q => {
+                    initialAnswers[q.id] = q.type === 'multi' ? [] : null;
+                });
+                setAnswers(initialAnswers);
             })
             .catch((err)=> {
                 console.log(err);
@@ -29,6 +39,57 @@ const SurveyWritePage = () => {
                 setLoading(false);
             });
     },[id])
+
+    const handleAnswerChange = (questionId, answer) => {
+        setAnswers(prev => ({
+            ...prev,
+            [questionId]: answer
+        }));
+    };
+
+    const handleSubmit = async () => {
+        // 验证所有问题是否都已回答
+        const unansweredQuestions = survey.questions.filter(q => {
+            const answer = answers[q.id];
+            return answer === null || (Array.isArray(answer) && answer.length === 0) || answer === '';
+        });
+
+        if (unansweredQuestions.length > 0) {
+            alert('请回答所有问题后再提交！');
+            return;
+        }
+
+        setSubmitting(true);
+        try {
+            // 获取最新的问卷数据
+            const { data: currentSurvey } = await Axios.get(`/surveys/${id}`);
+            
+            // 构建提交的答案数据
+            const updatedSurvey = {
+                ...currentSurvey,
+                results: [
+                    ...(currentSurvey.results || []),
+                    {
+                        user: user.username,
+                        answers: Object.entries(answers).map(([questionId, answer]) => ({
+                            id: questionId,
+                            answer
+                        }))
+                    }
+                ]
+            };
+
+            // 更新问卷数据
+            await Axios.put(`/surveys/${id}`, updatedSurvey);
+            alert('问卷提交成功！');
+            navigate('/surveylist');
+        } catch (error) {
+            console.error('提交失败：', error);
+            alert('提交失败，请重试！');
+        } finally {
+            setSubmitting(false);
+        }
+    };
     
     if (loading) {
         return (
@@ -83,16 +144,18 @@ const SurveyWritePage = () => {
                     marginBottom: '2rem'
                 }}>出卷人：{survey.creator}</p>
                 
-                <form style={{
+                <form onSubmit={(e) => {
+                    e.preventDefault();
+                    handleSubmit();
+                }} style={{
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '2rem'
                 }}>
                     {survey.questions.map(question => {
-                        // 创建一个不包含答案的问题对象
-                        const questionWithoutAnswer = {
+                        const questionWithAnswer = {
                             ...question,
-                            answer: undefined
+                            answer: answers[question.id]
                         };
                         
                         return (
@@ -104,37 +167,42 @@ const SurveyWritePage = () => {
                             }}>
                                 {question.type === 'single' && (
                                     <SingleChoice 
-                                        question={questionWithoutAnswer} 
+                                        question={questionWithAnswer}
                                         viewOnly={true} 
                                         namePrefix={`survey-${survey.id}`}
+                                        onChange={(newQuestion) => handleAnswerChange(question.id, newQuestion.answer)}
                                     />
                                 )}
                                 {question.type === 'multi' && (
                                     <MultiChoice 
-                                        question={questionWithoutAnswer} 
+                                        question={questionWithAnswer}
                                         viewOnly={true} 
                                         namePrefix={`survey-${survey.id}`}
+                                        onChange={(newQuestion) => handleAnswerChange(question.id, newQuestion.answer)}
                                     />
                                 )}
                                 {question.type === 'blank' && (
                                     <FillBlank 
-                                        question={questionWithoutAnswer} 
+                                        question={questionWithAnswer}
                                         viewOnly={true} 
                                         namePrefix={`survey-${survey.id}`}
+                                        onChange={(newQuestion) => handleAnswerChange(question.id, newQuestion.answer)}
                                     />
                                 )}
                                 {question.type === 'score' && (
                                     <Score 
-                                        question={question} 
+                                        question={questionWithAnswer}
                                         viewOnly={true} 
                                         namePrefix={`survey-${survey.id}`}
+                                        onChange={(newQuestion) => handleAnswerChange(question.id, newQuestion.answer)}
                                     />
                                 )}
                                 {question.type === 'locate' && (
                                     <Locate 
-                                        question={question} 
+                                        question={questionWithAnswer}
                                         viewOnly={true} 
                                         namePrefix={`survey-${survey.id}`}
+                                        onChange={(newQuestion) => handleAnswerChange(question.id, newQuestion.answer)}
                                     />
                                 )}
                             </div>
@@ -142,20 +210,21 @@ const SurveyWritePage = () => {
                     })}
                     
                     <button 
-                        type="button"
+                        type="submit"
+                        disabled={submitting}
                         style={{
                             padding: '0.75rem',
-                            backgroundColor: '#3b82f6',
+                            backgroundColor: submitting ? '#9ca3af' : '#3b82f6',
                             color: 'white',
                             border: 'none',
                             borderRadius: '0.5rem',
                             fontWeight: '500',
-                            cursor: 'pointer',
+                            cursor: submitting ? 'not-allowed' : 'pointer',
                             transition: 'background-color 0.2s',
                             marginTop: '1rem'
                         }}
                     >
-                        提交问卷
+                        {submitting ? '提交中...' : '提交问卷'}
                     </button>
                 </form>
             </div>
