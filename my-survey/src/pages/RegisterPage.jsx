@@ -190,7 +190,7 @@ const RegisterPage = () => {
                     textAlign: 'center',
                     marginTop: '1rem'
                 }}>
-                    <Link to="/register" style={{
+                    <Link to="/login" style={{
                         color: '#3b82f6',
                         textDecoration: 'none',
                         fontSize: '0.875rem'
