@@ -8,10 +8,7 @@ import Locate from "../components/Questions/Locate.jsx";
 import MultiChoice from "../components/Questions/MultiChoice.jsx";
 import Score from "../components/Questions/Score.jsx";
 import SingleChoice from "../components/Questions/SingleChoice.jsx";
-
-// 设置axios默认配置
 Axios.defaults.baseURL = 'http://localhost:3000';
-
 const SurveyWritePage = () => {
     const {id} = useParams();
     const navigate = useNavigate();
@@ -20,17 +17,19 @@ const SurveyWritePage = () => {
     const [loading, setLoading] = useState(true);
     const [answers, setAnswers] = useState({});
     const [submitting, setSubmitting] = useState(false);
-    
+    const [surveyFinished, setSurveyFinished] = useState(null);
     useEffect(() => {
         Axios.get(`/surveys/${id}`)
             .then((res)=> {
-                setSurvey(res.data);
-                // 初始化answers对象
+                const e=res.data;
+                setSurvey(e);
                 const initialAnswers = {};
-                res.data.questions.forEach(q => {
+                e.questions.forEach(q => {
                     initialAnswers[q.id] = q.type === 'multi' ? [] : null;
                 });
                 setAnswers(initialAnswers);
+                const finished=Array.isArray(e.results)?e.results.find(s=>s.user===user.username):null;
+                setSurveyFinished(finished||null);
             })
             .catch((err)=> {
                 console.log(err);
@@ -48,7 +47,10 @@ const SurveyWritePage = () => {
     };
 
     const handleSubmit = async () => {
-        // 验证所有问题是否都已回答
+        if(surveyFinished){
+            alert('你已经完成问卷了')
+            return
+        }
         const unansweredQuestions = survey.questions.filter(q => {
             const answer = answers[q.id];
             return answer === null || (Array.isArray(answer) && answer.length === 0) || answer === '';
@@ -61,10 +63,7 @@ const SurveyWritePage = () => {
 
         setSubmitting(true);
         try {
-            // 获取最新的问卷数据
             const { data: currentSurvey } = await Axios.get(`/surveys/${id}`);
-            
-            // 构建提交的答案数据
             const updatedSurvey = {
                 ...currentSurvey,
                 results: [
@@ -78,8 +77,14 @@ const SurveyWritePage = () => {
                     }
                 ]
             };
+    const finishedSurvey={
+        user: user.username,
+        answers: Object.entries(answers).map(([Id, answer]) => ({
+            id: id,
+            answer:ans
+        }))
+    }
 
-            // 更新问卷数据
             await Axios.put(`/surveys/${id}`, updatedSurvey);
             alert('问卷提交成功！');
             navigate('/surveylist');
@@ -152,11 +157,13 @@ const SurveyWritePage = () => {
                     flexDirection: 'column',
                     gap: '2rem'
                 }}>
-                    {survey.questions.map(question => {
-                        const questionWithAnswer = {
-                            ...question,
-                            answer: answers[question.id]
-                        };
+                    {survey.questions.map((question,idx) => {
+                        const prev=surveyFinished?surveyFinished.answers.find(e=>e.id===String(question.id)):null;
+                        const prevAnswer=prev?prev.answer:null;
+
+
+
+                        const questionWithAnswer = surveyFinished?{...question,answer:prevAnswer}:{...question,answer:answers[question.id]}
                         
                         return (
                             <div key={question.id} style={{
@@ -165,44 +172,58 @@ const SurveyWritePage = () => {
                                 borderRadius: '0.75rem',
                                 border: '1px solid #e5e7eb'
                             }}>
+                                <span>第{idx+1}题</span>
+                                <span style={{color: '#3b82f6'}}>
+                                {question.type === 'locate' && question.answer
+                                    ? `(${question.answer.latitude.toFixed(6)}, ${question.answer.longitude.toFixed(6)})`
+                                    : question.answer}
+                                    【{{
+                                    single:   '单选题',
+                                    multi:    '多选题',
+                                    blank:    '填空题',
+                                    score:    '打分题',
+                                    locate:   '定位题',
+                                    dropdown: '下拉框题'
+                                }[question.type]}】</span>
                                 {question.type === 'single' && (
                                     <SingleChoice 
                                         question={questionWithAnswer}
-                                        viewOnly={true} 
+                                        viewOnly={Boolean(surveyFinished)}
                                         namePrefix={`survey-${survey.id}`}
-                                        onChange={(newQuestion) => handleAnswerChange(question.id, newQuestion.answer)}
+                                        onChange={surveyFinished?undefined:(ans=>handleAnswerChange(question.id,ans))}
                                     />
                                 )}
                                 {question.type === 'multi' && (
                                     <MultiChoice 
                                         question={questionWithAnswer}
-                                        viewOnly={true} 
+                                        viewOnly={Boolean(surveyFinished)}
                                         namePrefix={`survey-${survey.id}`}
-                                        onChange={(newQuestion) => handleAnswerChange(question.id, newQuestion.answer)}
+                                        onChange={surveyFinished?undefined:(ans=>handleAnswerChange(question.id,ans))}
                                     />
                                 )}
                                 {question.type === 'blank' && (
                                     <FillBlank 
                                         question={questionWithAnswer}
-                                        viewOnly={true} 
+                                        viewOnly={Boolean(surveyFinished)}
                                         namePrefix={`survey-${survey.id}`}
-                                        onChange={(newQuestion) => handleAnswerChange(question.id, newQuestion.answer)}
+                                        onChange={surveyFinished?undefined:(ans=>handleAnswerChange(question.id,ans))}
                                     />
                                 )}
                                 {question.type === 'score' && (
-                                    <Score 
+                                    <Score
                                         question={questionWithAnswer}
-                                        viewOnly={true} 
+                                        viewOnly={Boolean(surveyFinished)}
                                         namePrefix={`survey-${survey.id}`}
-                                        onChange={(newQuestion) => handleAnswerChange(question.id, newQuestion.answer)}
+                                        onChange={surveyFinished?undefined:(ans=>handleAnswerChange(question.id,ans))}
+
                                     />
                                 )}
                                 {question.type === 'locate' && (
                                     <Locate 
                                         question={questionWithAnswer}
-                                        viewOnly={true} 
+                                        viewOnly={Boolean(surveyFinished)}
                                         namePrefix={`survey-${survey.id}`}
-                                        onChange={(newQuestion) => handleAnswerChange(question.id, newQuestion.answer)}
+                                        onChange={surveyFinished?undefined:(ans=>handleAnswerChange(question.id,ans))}
                                     />
                                 )}
                             </div>
@@ -214,7 +235,7 @@ const SurveyWritePage = () => {
                         disabled={submitting}
                         style={{
                             padding: '0.75rem',
-                            backgroundColor: submitting ? '#9ca3af' : '#3b82f6',
+                            backgroundColor:surveyFinished?"#9ca3af":submitting ? '#9ca3af' : '#3b82f6',
                             color: 'white',
                             border: 'none',
                             borderRadius: '0.5rem',
@@ -224,7 +245,8 @@ const SurveyWritePage = () => {
                             marginTop: '1rem'
                         }}
                     >
-                        {submitting ? '提交中...' : '提交问卷'}
+                        {surveyFinished?'你已完成答卷':(submitting ? '提交中...' : '提交问卷')}
+
                     </button>
                 </form>
             </div>
