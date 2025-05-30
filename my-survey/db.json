@@ -17,6 +17,12 @@
       "username": "zzx",
       "password": "123456",
       "token": "4aodx29j"
+    },
+    {
+      "username": "rinal",
+      "password": "666666",
+      "token": "zoqqvav2",
+      "id": "28R0uI_"
     }
   ],
   "surveys": [
@@ -98,6 +104,18 @@
               "answer": {
                 "longitude": 106.61313909116,
                 "latitude": 29.536323452866
+              }
+            }
+          ]
+        },
+        {
+          "user": "rinal",
+          "answers": [
+            {
+              "id": "1748594106041",
+              "answer": {
+                "longitude": 106.61314479832,
+                "latitude": 29.53631579385
               }
             }
           ]

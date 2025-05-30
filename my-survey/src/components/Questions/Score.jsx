@@ -90,7 +90,7 @@ export default function Score({ question, onChange, onDelete, viewOnly=false, na
                             {[1,2,3,4,5].map(score => (
                                 <div
                                     key={score}
-                                    onClick={() => handleScoreChange(0, score)}
+                                    onClick={() => !viewOnly && handleScoreChange(0, score)}
                                     style={{
                                         minWidth: '2.5rem',
                                         height: '2.5rem',
@@ -98,12 +98,13 @@ export default function Score({ question, onChange, onDelete, viewOnly=false, na
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        cursor: 'pointer',
+                                        cursor: viewOnly ? 'default' : 'pointer',
                                         backgroundColor: scores[0] === score ? '#93c5fd' : 'white',
                                         color: scores[0] === score ? '#1e40af' : '#374151',
                                         borderRadius: '0.375rem',
                                         transition: 'all 0.2s',
-                                        userSelect: 'none'
+                                        userSelect: 'none',
+                                        opacity: viewOnly ? 0.7 : 1
                                     }}
                                 >
                                     {score}

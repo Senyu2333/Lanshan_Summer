@@ -18,18 +18,20 @@ const SurveyWritePage = () => {
     const [answers, setAnswers] = useState({});
     const [submitting, setSubmitting] = useState(false);
     const [surveyFinished, setSurveyFinished] = useState(null);
+    const [isCreator, setIsCreator] = useState(false);
     useEffect(() => {
         Axios.get(`/surveys/${id}`)
             .then((res)=> {
-                const e=res.data;
+                const e = res.data;
                 setSurvey(e);
+                setIsCreator(e.creator === user.username);
                 const initialAnswers = {};
                 e.questions.forEach(q => {
                     initialAnswers[q.id] = q.type === 'multi' ? [] : null;
                 });
                 setAnswers(initialAnswers);
-                const finished=Array.isArray(e.results)?e.results.find(s=>s.user===user.username):null;
-                setSurveyFinished(finished||null);
+                const finished = Array.isArray(e.results) ? e.results.find(s => s.user === user.username) : null;
+                setSurveyFinished(finished || null);
             })
             .catch((err)=> {
                 console.log(err);
@@ -37,13 +39,25 @@ const SurveyWritePage = () => {
             .finally(()=>{
                 setLoading(false);
             });
-    },[id])
+    }, [id, user.username])
 
     const handleAnswerChange = (questionId, question) => {
-        setAnswers(prev => ({
-            ...prev,
-            [questionId]: question.answer
-        }));
+        if (surveyFinished) return;
+        
+        const answer = question.type === 'multi' ? 
+            (Array.isArray(question.answer) ? [...question.answer] : []) : 
+            question.answer;
+            
+        console.log('Saving answer for question', questionId, ':', answer);
+        
+        setAnswers(prev => {
+            const newAnswers = {
+                ...prev,
+                [questionId]: answer
+            };
+            console.log('New answers state:', newAnswers);
+            return newAnswers;
+        });
     };
 
     const handleSubmit = async () => {
@@ -51,6 +65,7 @@ const SurveyWritePage = () => {
             alert('你已经完成问卷了')
             return
         }
+
         const unansweredQuestions = survey.questions.filter(q => {
             const answer = answers[q.id];
             if (q.type === 'locate') {
@@ -188,42 +203,46 @@ const SurveyWritePage = () => {
                                 {question.type === 'single' && (
                                     <SingleChoice 
                                         question={questionWithAnswer}
-                                        viewOnly={Boolean(surveyFinished)}
+                                        viewOnly={surveyFinished}
                                         namePrefix={`survey-${survey.id}`}
-                                        onChange={surveyFinished?undefined:(ans=>handleAnswerChange(question.id,ans))}
+                                        onChange={(ans) => handleAnswerChange(question.id, ans)}
+                                        onDelete={undefined}
                                     />
                                 )}
                                 {question.type === 'multi' && (
                                     <MultiChoice 
                                         question={questionWithAnswer}
-                                        viewOnly={Boolean(surveyFinished)}
+                                        viewOnly={surveyFinished}
                                         namePrefix={`survey-${survey.id}`}
-                                        onChange={surveyFinished?undefined:(ans=>handleAnswerChange(question.id,ans))}
+                                        onChange={(ans) => handleAnswerChange(question.id, ans)}
+                                        onDelete={undefined}
                                     />
                                 )}
                                 {question.type === 'blank' && (
                                     <FillBlank 
                                         question={questionWithAnswer}
-                                        viewOnly={Boolean(surveyFinished)}
+                                        viewOnly={surveyFinished}
                                         namePrefix={`survey-${survey.id}`}
-                                        onChange={surveyFinished?undefined:(ans=>handleAnswerChange(question.id,ans))}
+                                        onChange={(ans) => handleAnswerChange(question.id, ans)}
+                                        onDelete={undefined}
                                     />
                                 )}
                                 {question.type === 'score' && (
                                     <Score
                                         question={questionWithAnswer}
-                                        viewOnly={Boolean(surveyFinished)}
+                                        viewOnly={surveyFinished}
                                         namePrefix={`survey-${survey.id}`}
-                                        onChange={surveyFinished?undefined:(ans=>handleAnswerChange(question.id,ans))}
-
+                                        onChange={(ans) => handleAnswerChange(question.id, ans)}
+                                        onDelete={undefined}
                                     />
                                 )}
                                 {question.type === 'locate' && (
                                     <Locate 
                                         question={questionWithAnswer}
-                                        viewOnly={Boolean(surveyFinished)}
+                                        viewOnly={surveyFinished}
                                         namePrefix={`survey-${survey.id}`}
-                                        onChange={surveyFinished?undefined:(ans=>handleAnswerChange(question.id,ans))}
+                                        onChange={(ans) => handleAnswerChange(question.id, ans)}
+                                        onDelete={undefined}
                                     />
                                 )}
                             </div>

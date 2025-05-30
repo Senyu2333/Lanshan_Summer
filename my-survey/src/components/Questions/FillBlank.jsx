@@ -22,6 +22,33 @@ export default function FillBlank({question, onChange, onDelete, viewOnly=false}
                 <textarea 
                     placeholder="请输入您的答案"
                     value={question.answer || ''}
+                    disabled={viewOnly}
+                    style={{
+                        width: '100%',
+                        minHeight: '100px',
+                        padding: '0.75rem',
+                        border: '1px solid #d1d5db',
+                        borderRadius: '0.5rem',
+                        outline: 'none',
+                        resize: 'vertical',
+                        backgroundColor: viewOnly ? '#f3f4f6' : 'white',
+                        cursor: viewOnly ? 'default' : 'text'
+                    }}
+                />
+            </div>
+        );
+    }
+
+    if (!onDelete) {
+        return (
+            <div style={{ margin: '1rem 0' }}>
+                <p style={{
+                    marginBottom: '0.5rem',
+                    fontWeight: '500'
+                }}>{question.title}</p>
+                <textarea 
+                    placeholder="请输入您的答案"
+                    value={question.answer || ''}
                     onChange={handleAnswerChange}
                     style={{
                         width: '100%',
@@ -37,6 +64,7 @@ export default function FillBlank({question, onChange, onDelete, viewOnly=false}
         );
     }
 
+    // 编辑模式
     return (
         <div>
             <div style={{
