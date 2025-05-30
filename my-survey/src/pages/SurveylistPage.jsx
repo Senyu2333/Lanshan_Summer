@@ -2,23 +2,25 @@ import React, {useState, useEffect} from 'react'
 import {Helmet} from 'react-helmet'
 import Axios from 'axios'
 import {useNavigate} from 'react-router-dom'
+import {useSelector} from "react-redux";
+
 const SurveylistPage = () => {
     const [surveys, setSurvey] = useState([])
-    const [IsCreator, setIsCreator] = useState(false)
     const navigate = useNavigate();
+    const user = useSelector((state) => state.auth.user);
     useEffect(()=>{
         Axios.get('http://localhost:3000/surveys')
             .then(res=>{
                 setSurvey(res.data)
-                setIsCreator(res.data.creator===user.username)
             })
             .catch(err=>{
                 console.log(err)
             })
     },[])
     const surveyDelete=async(id)=>{
-        if(!IsCreator){
-            alert("⚠️ 你没有权限")
+        const currentSurvey=surveys.find(s => s.id === id)
+        if(currentSurvey.creator!==user.username){
+            alert('⚠️ 你没有权限!');
             return;
         }
         const confirmDelete=window.confirm("⚠️ 确定要删除这个问卷吗？删除后将无法恢复！")
@@ -26,7 +28,7 @@ const SurveylistPage = () => {
         try{
             await Axios.delete(`http://localhost:3000/surveys/${id}`)
             setSurvey(prev=>prev.filter(e=>e.id!==id))
-            alert(`问卷已经删除`)
+            alert(`问卷已经删除!`)
         }catch(err){
             console.log(err)
         }
@@ -134,7 +136,8 @@ const SurveylistPage = () => {
                                 >删除</button>
                                 <button 
                                     type='button'
-                                    style={{
+                                    onClick={()=>{survey.creator===user.username?navigate(`/result/${survey.id}`):navigate(`/403`)}}
+                                        style={{
                                         flex: 1,
                                         padding: '0.5rem 0.75rem',
                                         border: '1px solid #d1d5db',
