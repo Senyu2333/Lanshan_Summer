@@ -101,6 +101,13 @@ const SurveylistPage = () => {
                                     color: '#6b7280'
                                 }}>创建人: {survey.creator}</p>
                             </div>
+                            {(survey.results?.some(e=>e.user===user.username))&&
+                                <div style={{
+                                    color: 'green',
+                                }}>
+                                你已经完成啦
+                                </div>
+                            }
                             <div style={{
                                 display: 'flex',
                                 gap: '0.5rem'
