@@ -8,6 +8,7 @@ import Locate from "../components/Questions/Locate.jsx";
 import MultiChoice from "../components/Questions/MultiChoice.jsx";
 import Score from "../components/Questions/Score.jsx";
 import SingleChoice from "../components/Questions/SingleChoice.jsx";
+import Progress from "../components/Questions/Progress.jsx";
 Axios.defaults.baseURL = 'http://localhost:3000';
 const SurveyWritePage = () => {
     const {id} = useParams();
