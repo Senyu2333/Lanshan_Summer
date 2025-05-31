@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import MainLayout from './Layout/MainLayout';
+import MainLayout from '../components/Layout/MainLayout.jsx';
 
 const ProtectedRoute = ({ children }) => {
     const user = useSelector((state) => state.auth.user);

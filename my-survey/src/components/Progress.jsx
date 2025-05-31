@@ -4,7 +4,7 @@ import {useParams} from 'react-router-dom';
 import {useEffect} from "react";
 import {useState} from "react";
 import {useSelector} from "react-redux";
-export default function Progress() {
+export default function Progress({finished,total}) {
     const id = useParams();
     const [survey,setSurvey]=useState(null);
     const user=useSelector((state) => state.auth.user)

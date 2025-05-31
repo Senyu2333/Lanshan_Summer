@@ -15,11 +15,11 @@ const SurveyWritePage = () => {
     const navigate = useNavigate();
     const user = useSelector(state => state.auth.user);
     const [survey, setSurvey] = useState(null);
-    const [loading, setLoading] = useState(true);
     const [answers, setAnswers] = useState({});
     const [submitting, setSubmitting] = useState(false);
     const [surveyFinished, setSurveyFinished] = useState(null);
     const [isCreator, setIsCreator] = useState(false);
+    const totalQuestions=survey.questions.length;
     useEffect(() => {
         Axios.get(`/surveys/${id}`)
             .then((res)=> {
@@ -37,9 +37,7 @@ const SurveyWritePage = () => {
             .catch((err)=> {
                 console.log(err);
             })
-            .finally(()=>{
-                setLoading(false);
-            });
+
     }, [id, user.username])
 
     const handleAnswerChange = (questionId, question) => {
@@ -114,24 +112,7 @@ const SurveyWritePage = () => {
             setSubmitting(false);
         }
     };
-    
-    if (loading) {
-        return (
-            <div style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                minHeight: '100vh',
-                backgroundColor: '#f3f4f6'
-            }}>
-                <p style={{
-                    fontSize: '1.125rem',
-                    color: '#6b7280'
-                }}>问卷加载中…</p>
-            </div>
-        );
-    }
-    
+
     if (!survey) {
         navigate('*')
     }
@@ -167,7 +148,7 @@ const SurveyWritePage = () => {
                     color: '#6b7280',
                     marginBottom: '2rem'
                 }}>出卷人：{survey.creator}</p>
-                
+                {!surveyFinished&&<Progress finshed={} total={totalQuestions}/>}
                 <form onSubmit={(e) => {
                     e.preventDefault();
                     handleSubmit();

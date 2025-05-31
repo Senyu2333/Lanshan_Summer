@@ -4,7 +4,7 @@ import ForbiddenPage from "../pages/ForbiddenPage.jsx";
 import NotFoundPage from "../pages/NotFoundPage.jsx";
 import MyAnswersPage from "../pages/MyAnswersPage.jsx";
 import {Suspense, lazy} from "react";
-import ProtectedRoute from "../components/ProtectedRoute";
+import ProtectedRoute from "../router/ProtectedRoute";
 
 const LoginPage = lazy(() => import("../pages/LoginPage.jsx"));
 const RegisterPage = lazy(() => import("../pages/RegisterPage.jsx"));
@@ -17,7 +17,7 @@ export default function AppRouter() {
     return (
         <Suspense fallback={<h1 style={{textAlign: "center"}}>加载中...</h1>}>
             <Routes>
-                <Route path="/" element={<Navigate to="/surveylist" replace />} />
+                <Route path="/" element={<Navigate to="/login" replace />} />
                 <Route path="/surveylist" element={<ProtectedRoute><SurveylistPage /></ProtectedRoute>} />
                 <Route path="/403" element={<ForbiddenPage />} />
                 <Route path="*" element={<NotFoundPage />} />
