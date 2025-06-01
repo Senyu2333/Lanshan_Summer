@@ -8,7 +8,7 @@ import Locate from "../components/Questions/Locate.jsx";
 import MultiChoice from "../components/Questions/MultiChoice.jsx";
 import Score from "../components/Questions/Score.jsx";
 import SingleChoice from "../components/Questions/SingleChoice.jsx";
-import Progress from "../components/Questions/Progress.jsx";
+import Progress from "../components/Progress.jsx";
 Axios.defaults.baseURL = 'http://localhost:3000';
 const SurveyWritePage = () => {
     const {id} = useParams();
@@ -19,7 +19,9 @@ const SurveyWritePage = () => {
     const [submitting, setSubmitting] = useState(false);
     const [surveyFinished, setSurveyFinished] = useState(null);
     const [isCreator, setIsCreator] = useState(false);
-    const totalQuestions=survey.questions.length;
+    const [totalQuestions, setTotalQuestions] = useState(0);
+    const [finishedQuestions, setFinishedQuestions] = useState(0);
+
     useEffect(() => {
         Axios.get(`/surveys/${id}`)
             .then((res)=> {
@@ -33,12 +35,38 @@ const SurveyWritePage = () => {
                 setAnswers(initialAnswers);
                 const finished = Array.isArray(e.results) ? e.results.find(s => s.user === user.username) : null;
                 setSurveyFinished(finished || null);
+                setTotalQuestions(e.questions.length);
+                if (finished) {
+                    setFinishedQuestions(finished.answers.length);
+                }
             })
             .catch((err)=> {
                 console.log(err);
+                navigate('*');
             })
-
     }, [id, user.username])
+
+    useEffect(() => {
+        if (!survey) return;
+        
+        const answeredCount = Object.values(answers).filter(answer => {
+            if (Array.isArray(answer)) {
+                return answer.length > 0;
+            }
+            if (typeof answer === 'object' && answer !== null) {
+                if ('latitude' in answer && 'longitude' in answer) {
+                    return answer.latitude && answer.longitude;
+                }
+                if ('0' in answer) {
+                    return typeof answer[0] === 'number';
+                }
+                return false;
+            }
+            return answer !== null && answer !== '';
+        }).length;
+        
+        setFinishedQuestions(answeredCount);
+    }, [answers, survey]);
 
     const handleAnswerChange = (questionId, question) => {
         if (surveyFinished) return;
@@ -81,6 +109,7 @@ const SurveyWritePage = () => {
         setSubmitting(true);
         try {
             const { data: currentSurvey } = await Axios.get(`/surveys/${id}`);
+
             const updatedSurvey = {
                 ...currentSurvey,
                 results: [
@@ -94,13 +123,6 @@ const SurveyWritePage = () => {
                     }
                 ]
             };
-    const finishedSurvey = {
-        user: user.username,
-        answers: Object.entries(answers).map(([questionId, answer]) => ({
-            id: questionId,
-            answer: answer
-        }))
-    }
 
             await Axios.put(`/surveys/${id}`, updatedSurvey);
             alert('问卷提交成功！');
@@ -114,9 +136,25 @@ const SurveyWritePage = () => {
     };
 
     if (!survey) {
-        navigate('*')
+        return (
+            <div style={{
+                minHeight: '100vh',
+                backgroundColor: '#f3f4f6',
+                padding: '2rem',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+            }}>
+                <div style={{
+                    fontSize: '1.125rem',
+                    color: '#6b7280'
+                }}>
+                    加载中...
+                </div>
+            </div>
+        );
     }
-    
+
     return (
         <div style={{
             minHeight: '100vh',
@@ -124,12 +162,13 @@ const SurveyWritePage = () => {
             padding: '2rem'
         }}>
             <Helmet>
-                <title>填写问卷 - {survey.title}</title>
+                <title>问卷填写 - {survey.title}</title>
             </Helmet>
             
             <div style={{
                 maxWidth: '800px',
                 margin: '0 auto',
+                marginRight: 'calc(200px + 4rem)', // 为进度条留出空间
                 backgroundColor: 'white',
                 borderRadius: '1rem',
                 padding: '2rem',
@@ -148,7 +187,7 @@ const SurveyWritePage = () => {
                     color: '#6b7280',
                     marginBottom: '2rem'
                 }}>出卷人：{survey.creator}</p>
-                {!surveyFinished&&<Progress finshed={} total={totalQuestions}/>}
+                {!surveyFinished && <Progress finished={finishedQuestions} total={totalQuestions}/>}
                 <form onSubmit={(e) => {
                     e.preventDefault();
                     handleSubmit();
@@ -160,8 +199,6 @@ const SurveyWritePage = () => {
                     {survey.questions.map((question,idx) => {
                         const prev=surveyFinished?surveyFinished.answers.find(e=>e.id===String(question.id)):null;
                         const prevAnswer=prev?prev.answer:null;
-
-
 
                         const questionWithAnswer = surveyFinished?{...question,answer:prevAnswer}:{...question,answer:answers[question.id]}
                         
@@ -247,7 +284,6 @@ const SurveyWritePage = () => {
                         }}
                     >
                         {surveyFinished?'你已完成答卷':(submitting ? '提交中...' : '提交问卷')}
-
                     </button>
                 </form>
             </div>
