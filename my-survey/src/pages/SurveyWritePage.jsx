@@ -217,7 +217,6 @@ const SurveyWritePage = () => {
                                     blank:    '填空题',
                                     score:    '打分题',
                                     locate:   '定位题',
-                                    dropdown: '下拉框题'
                                 }[question.type]}】</span>
                                 {question.type === 'single' && (
                                     <SingleChoice 

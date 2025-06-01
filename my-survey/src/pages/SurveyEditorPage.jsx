@@ -144,7 +144,7 @@ const SurveyEditorPage = () => {
                     gap: '1rem',
                     justifyContent: 'center'
                 }}>
-                    {['单选题', '多选题', '填空题', '打分题', '下拉框题', '定位题'].map((type, index) => (
+                    {['单选题', '多选题', '填空题', '打分题', '定位题'].map((type, index) => (
                         <button
                             key={type}
                             type="button"
@@ -154,7 +154,7 @@ const SurveyEditorPage = () => {
                                     case 1: addMultiChoice(); break;
                                     case 2: addFillBlank(); break;
                                     case 3: addScore(); break;
-                                    case 5: addLocate(); break;
+                                    case 4: addLocate(); break;
                                 }
                             }}
                             style={{
@@ -197,7 +197,6 @@ const SurveyEditorPage = () => {
                                 blank:    '填空题',
                                 score:    '打分题',
                                 locate:   '定位题',
-                                dropdown: '下拉框题'
                             }[question.type]}】</span>
                             {question.type === 'single' &&
                                 <SingleChoice question={question} 
