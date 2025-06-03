@@ -29,7 +29,132 @@
       "password": "123456",
       "token": "2sc1tdln",
       "id": "WOuNbnt"
+    },
+    {
+      "username": "test2",
+      "password": "123456",
+      "token": "asdwegd2",
+      "id": "zfvHZO9"
     }
   ],
-  "surveys": []
+  "surveys": [
+    {
+      "title": "问卷1",
+      "questions": [
+        {
+          "id": 1748949885178,
+          "type": "single",
+          "title": "你的性别是？",
+          "options": [
+            "男",
+            "女",
+            "其他"
+          ],
+          "answer": null
+        },
+        {
+          "id": 1748949913877,
+          "type": "blank",
+          "title": "你的学号是？",
+          "answer": ""
+        },
+        {
+          "id": 1748949919565,
+          "type": "score",
+          "title": "对本系统的评价是？",
+          "cells": [
+            ""
+          ],
+          "scoreOptions": [
+            0,
+            2,
+            4,
+            6,
+            8,
+            10
+          ]
+        },
+        {
+          "id": 1748949979599,
+          "type": "locate",
+          "title": "你的位置在哪里？",
+          "answer": null
+        },
+        {
+          "id": 1748950016170,
+          "type": "multi",
+          "title": "这题选AD",
+          "options": [
+            "别选我",
+            "选我",
+            "选我~",
+            "别选我！"
+          ],
+          "answer": []
+        }
+      ],
+      "creator": "admin",
+      "id": 1,
+      "results": [
+        {
+          "user": "rinal",
+          "answers": [
+            {
+              "id": "1748949885178",
+              "answer": 0
+            },
+            {
+              "id": "1748949913877",
+              "answer": "2"
+            },
+            {
+              "id": "1748949919565",
+              "answer": {
+                "0": 10
+              }
+            },
+            {
+              "id": "1748949979599",
+              "answer": {
+                "longitude": 106.61314180543,
+                "latitude": 29.536315826178
+              }
+            },
+            {
+              "id": "1748950016170",
+              "answer": [
+                0,
+                3
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "测试问卷",
+      "questions": [
+        {
+          "id": 1748951000001,
+          "type": "single",
+          "title": "你喜欢我们的产品吗？",
+          "options": [
+            "非常喜欢",
+            "一般",
+            "不喜欢"
+          ],
+          "answer": null
+        },
+        {
+          "id": 1748951005002,
+          "type": "blank",
+          "title": "请填写你的建议：",
+          "answer": ""
+        }
+      ],
+      "creator": "test2",
+      "results": [],
+      "id": 2
+    }
+  ]
 }
