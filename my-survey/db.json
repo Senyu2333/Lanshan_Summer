@@ -174,36 +174,6 @@
       ],
       "creator": "rinal",
       "id": 3
-    },
-    {
-      "title": "11",
-      "questions": [
-        {
-          "id": 1749000481780,
-          "type": "single",
-          "title": "22",
-          "options": [
-            "2",
-            "3",
-            "4",
-            "5"
-          ],
-          "answer": null
-        }
-      ],
-      "creator": "wyh",
-      "id": 4,
-      "results": [
-        {
-          "user": "rinal",
-          "answers": [
-            {
-              "id": "1749000481780",
-              "answer": 0
-            }
-          ]
-        }
-      ]
     }
   ]
 }
