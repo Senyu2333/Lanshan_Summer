@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Helmet from 'react-helmet';
 import Axios from 'axios';
 import { useParams } from 'react-router-dom';
+import Pie from '../components/Pie';
 
 export default function SurveyResultPage() {
     const { id } = useParams();
@@ -34,7 +35,7 @@ export default function SurveyResultPage() {
                     optionCounts[idx] = 0;
                 });
                 answers.forEach(answer => {
-                    if (Array.isArray(answer)) { // 多选题
+                    if (Array.isArray(answer)) {
                         answer.forEach(choice => {
                             optionCounts[choice] = (optionCounts[choice] || 0) + 1;
                         });
@@ -64,7 +65,7 @@ export default function SurveyResultPage() {
                     if (question.type === 'locate') {
                         return `答案${idx + 1}: (经度:${answer.longitude.toFixed(4)}, 纬度:${answer.latitude.toFixed(4)})`;//司马百度地图只有4位精度
                     }
-                    return `答案${idx + 1}: ${answer}`;
+                    return `${user}: ${answer}`;
                 }).join('\n');
             }
 
@@ -98,7 +99,21 @@ export default function SurveyResultPage() {
             </div>
         );
     }
-
+    const results=Array.isArray(survey.results)?survey.results:[];
+    if(results.length===0){
+        return (
+            <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                minHeight: '50vh',
+                color: '#4b5563',
+                fontSize: '1.25rem'
+            }}>
+                <p>暂无结果喵，再耐心等等吧~</p>
+            </div>
+        )
+    }
     return (
         <div style={{
             minHeight: '100vh',
@@ -186,16 +201,27 @@ export default function SurveyResultPage() {
                                 border: '1px solid #e5e7eb'
                             }}>
                                 <div style={{color: '#4b5563', marginBottom: '0.5rem'}}>统计结果：</div>
-                                <pre style={{
-                                    whiteSpace: 'pre-wrap',
-                                    wordBreak: 'break-word',
-                                    color: 'green',
-                                    marginLeft: '1rem',
-                                    fontWeight: 'bold',
-                                    fontSize: '20px'
-                                }}>
-                                    {calculateResults(question)}
-                                </pre>
+                                {question.type === 'single' ? (
+                                    <Pie
+                                        domId={`pie-chart-${question.id}`}
+                                        options={question.options}
+                                        answers={survey.results.map(result => 
+                                            result.answers.find(a => String(a.id) === String(question.id))?.answer
+                                        ).filter(a => a !== undefined)}
+                                        title={question.title}
+                                    />
+                                ) : (
+                                    <pre style={{
+                                        whiteSpace: 'pre-wrap',
+                                        wordBreak: 'break-word',
+                                        color: 'green',
+                                        marginLeft: '1rem',
+                                        fontWeight: 'bold',
+                                        fontSize: '20px'
+                                    }}>
+                                        {calculateResults(question)}
+                                    </pre>
+                                )}
                             </div>
                         </div>
                     ))}
