@@ -2,11 +2,11 @@ import * as echarts from "echarts";
 import {useEffect} from "react";
 export default function Pie({domId,title,options=[],answers=[]}) {
     useEffect(() => {
-        const sum=new Array(options.length);
+        const sum=new Array(options.length).fill(0);
         answers.forEach(a=>{
             sum[a]++;
         })
-        const data=options.map((index,option)=>({
+        const data=options.map((option,index)=>({
             name:option,
             value:sum[index]
         }))
@@ -22,12 +22,25 @@ export default function Pie({domId,title,options=[],answers=[]}) {
             },
             tooltip:{
                 trigger: 'item',
+                formatter: '{b}: {c} ({d}%)'
             },
             legend:{
                 orient:'vertical',
-                left:'center',
+                left:'left'
             },
-            data:data
+            series:[{
+                data:data,
+                name:title,
+                type:'pie',
+                radius:'50%',
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }]
         };
         myChart.setOption(option);
         return ()=>myChart.dispose()
