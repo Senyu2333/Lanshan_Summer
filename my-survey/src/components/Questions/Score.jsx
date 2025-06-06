@@ -1,24 +1,15 @@
 import React, { useState, useEffect } from "react";
 
-export default function Score({ question, onChange, onDelete, viewOnly=false, namePrefix="" }) {
+export default function Score({ question, onChange, onDelete, viewOnly = false, namePrefix = "" }) {
     const { title = "" } = question;
     const [scores, setScores] = useState(question.answer || {});
-    const [scoreOptions, setScoreOptions] = useState(question.scoreOptions || [0, 2, 4, 6, 8, 10]);
+
+    const scoreOptions = Array.from({ length: 11 }, (_, index) => index);
 
     const handleTitleChange = e => {
         onChange({
             ...question,
             title: e.target.value
-        });
-    };
-
-    const handleScoreOptionChange = (index, value) => {
-        const newScoreOptions = [...scoreOptions];
-        newScoreOptions[index] = parseInt(value) || 0;
-        setScoreOptions(newScoreOptions);
-        onChange({
-            ...question,
-            scoreOptions: newScoreOptions
         });
     };
 
@@ -30,6 +21,7 @@ export default function Score({ question, onChange, onDelete, viewOnly=false, na
             answer: { 0: score }
         });
     };
+
     if (onDelete !== undefined && !viewOnly) {
         return (
             <div style={{
@@ -74,38 +66,6 @@ export default function Score({ question, onChange, onDelete, viewOnly=false, na
                     />
                 </div>
                 <div style={{
-                    marginBottom: '1rem'
-                }}>
-                    <div style={{
-                        fontSize: '0.875rem',
-                        color: '#374151',
-                        marginBottom: '0.5rem'
-                    }}>
-                        设置分值选项：
-                    </div>
-                    <div style={{
-                        display: 'flex',
-                        gap: '0.5rem',
-                        flexWrap: 'wrap'
-                    }}>
-                        {scoreOptions.map((score, index) => (
-                            <input
-                                key={index}
-                                type="number"
-                                value={score}
-                                onChange={(e) => handleScoreOptionChange(index, e.target.value)}
-                                style={{
-                                    width: '4rem',
-                                    padding: '0.5rem',
-                                    border: '1px solid #d1d5db',
-                                    borderRadius: '0.375rem',
-                                    textAlign: 'center'
-                                }}
-                            />
-                        ))}
-                    </div>
-                </div>
-                <div style={{
                     fontSize: '0.875rem',
                     color: '#6b7280',
                     marginBottom: '1rem'
@@ -146,6 +106,7 @@ export default function Score({ question, onChange, onDelete, viewOnly=false, na
             </div>
         );
     }
+
     return (
         <div style={{ margin: '1rem 0' }}>
             <div style={{
@@ -171,7 +132,7 @@ export default function Score({ question, onChange, onDelete, viewOnly=false, na
                     justifyContent: 'center',
                     padding: '0.5rem 0'
                 }}>
-                    {(question.scoreOptions || scoreOptions).map((score, index) => {
+                    {scoreOptions.map((score, index) => {
                         const isSelected = scores[0] === score;
                         return (
                             <div
