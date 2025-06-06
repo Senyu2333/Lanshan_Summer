@@ -2,7 +2,6 @@ import React from 'react'
 import {Routes, Route, Navigate} from 'react-router-dom';
 import ForbiddenPage from "../pages/ForbiddenPage.jsx";
 import NotFoundPage from "../pages/NotFoundPage.jsx";
-import MyAnswersPage from "../pages/MyAnswersPage.jsx";
 import {Suspense, lazy} from "react";
 import ProtectedRoute from "../router/ProtectedRoute";
 
@@ -26,7 +25,6 @@ export default function AppRouter() {
                 <Route path="/write/:id" element={<ProtectedRoute><SurveyWritePage /></ProtectedRoute>} />
                 <Route path="/edit/:id?" element={<ProtectedRoute><SurveyEditorPage /></ProtectedRoute>} />
                 <Route path="/result/:id" element={<ProtectedRoute><SurveyResultPage /></ProtectedRoute>} />
-                <Route path="/myanswers" element={<ProtectedRoute><MyAnswersPage /></ProtectedRoute>} />
             </Routes>
         </Suspense>
     )

@@ -64,7 +64,6 @@ export default function FillBlank({question, onChange, onDelete, viewOnly=false}
         );
     }
 
-    // 编辑模式
     return (
         <div>
             <div style={{

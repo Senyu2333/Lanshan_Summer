@@ -27,7 +27,6 @@ export default function SingleChoice({question, onChange, onDelete, viewOnly=fal
         onChange({...question, options: [...question.options, '']});
     }
 
-    // 编辑模式（创建问卷时）
     if (onDelete) {
         return (
             <div>
@@ -129,7 +128,6 @@ export default function SingleChoice({question, onChange, onDelete, viewOnly=fal
         );
     }
 
-    // 答题或查看模式
     return (
         <div style={{ margin: '1rem 0' }}>
             <p style={{ 

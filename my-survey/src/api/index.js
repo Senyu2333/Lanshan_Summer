@@ -44,9 +44,11 @@ export async function login(credentials) {
  * @param {Object} survey  完整的问卷对象
  * @returns {Promise<{code:0,data:any}|{code:1,message:string}>}
  */
-export function createSurvey(survey) {
-    return axios
-        .post('/surveys', survey)
-        .then(res => ({ code: 0, data: res.data }))
-        .catch(err => ({ code: 1, message: err.message }));
+export async function createSurvey(survey) {
+    try {
+        const res = await axios.post('/surveys', survey);
+        return { code: 0, data: res.data };
+    } catch (err) {
+        return { code: 1, message: err.message };
+    }
 }

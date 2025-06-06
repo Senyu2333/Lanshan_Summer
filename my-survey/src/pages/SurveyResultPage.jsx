@@ -65,7 +65,7 @@ export default function SurveyResultPage() {
                     if (question.type === 'locate') {
                         return `答案${idx + 1}: (经度:${answer.longitude.toFixed(4)}, 纬度:${answer.latitude.toFixed(4)})`;//司马百度地图只有4位精度
                     }
-                    return `${user}: ${answer}`;
+                    return `${answer}`;
                 }).join('\n');
             }
 

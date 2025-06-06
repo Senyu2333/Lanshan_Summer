@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react"
 import {useParams, useNavigate} from "react-router-dom"
-import {useSelector} from "react-redux"
+import {useSelector, useDispatch} from "react-redux"
 import {Helmet} from "react-helmet"
 import Axios from "axios";
 import FillBlank from "../components/Questions/FillBlank.jsx";

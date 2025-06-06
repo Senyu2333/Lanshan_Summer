@@ -20,7 +20,8 @@ export const loginAsync=createAsyncThunk(
         }
         return res.data;
     }
-)
+
+    )
 
 export const createAsync=createAsyncThunk(
     'auth/commit',
@@ -51,9 +52,15 @@ const slice = createSlice({
         surveys:[]
     },
     reducers:{
+    loggedIn(state, action){
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+    },
         logout(state){
             state.user=null;
             state.token=null
+            localStorage.removeItem('token')
+            localStorage.removeItem('user')
         }
     },
     extraReducers(builder){
@@ -73,7 +80,8 @@ const slice = createSlice({
                 s.loading=false;
                 s.user=a.payload;
                 s.token=a.payload.token;
-                console.log('登录成功，token:', s.token);
+                localStorage.setItem('user',JSON.stringify(a.payload));
+                localStorage.setItem('token',a.payload.token);
             })
             .addCase(loginAsync.rejected,(s,a) => {
             s.loading=false;
@@ -91,5 +99,5 @@ const slice = createSlice({
             })
     }
 });
-export const {logout}=slice.actions;
+export const {logout,loggedIn}=slice.actions;
 export default slice.reducer;
