@@ -15,7 +15,6 @@ export default function MultiChoice({question, onChange, onDelete, viewOnly=fals
         });
     }
 
-    // 编辑模式（创建问卷时）
     if (onDelete !== undefined) {
         return (
             <div>
