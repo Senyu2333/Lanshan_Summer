@@ -15,6 +15,7 @@ export default function Pie({domId,title,options=[],answers=[]}) {
             return;
         }
         const myChart = echarts.init(target);
+        
         const colorPalette = [
             '#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de',
             '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc', '#4e88b4'
@@ -43,19 +44,48 @@ export default function Pie({domId,title,options=[],answers=[]}) {
             legend:{
                 orient:'vertical',
                 left:'left',
+                top: 'middle',
                 textStyle: {
-                    fontSize: 12
+                    fontSize: 12,
+                    color: '#333'
                 },
-                itemWidth: 10,
-                itemHeight: 10,
-                itemGap: 10
+                itemWidth: 15,
+                itemHeight: 15,
+                itemGap: 12,
+                formatter: function(name) {
+                    // 计算百分比
+                    const item = data.find(item => item.name === name);
+                    const total = data.reduce((total, item) => total + item.value, 0);
+                    const percent = ((item.value / total) * 100).toFixed(0);
+                    
+                    // 如果名称太长，截断显示
+                    let displayName = name;
+                    if (name.length > 12) {
+                        displayName = name.substring(0, 12) + '...';
+                    }
+                    
+                    return `${displayName}: ${percent}%`;
+                },
+                tooltip: {
+                    show: true,
+                    formatter: function(params) {
+                        return params.name;
+                    }
+                }
+            },
+            grid: {
+                left: '25%',  // 为左侧图例留出空间
+                right: '5%',
+                bottom: '5%',
+                top: '20%',
+                containLabel: false
             },
             series:[{
                 data:data,
                 name:title,
                 type:'pie',
                 radius:['40%', '70%'], // 环形图
-                center: ['50%', '55%'],
+                center: ['60%', '55%'], // 将饼图向右移动
                 avoidLabelOverlap: true,
                 itemStyle: {
                     borderRadius: 8,
@@ -64,13 +94,19 @@ export default function Pie({domId,title,options=[],answers=[]}) {
                 },
                 label: {
                     show: true,
-                    formatter: '{b}: {d}%',
-                    position: 'outside'
+                    formatter: '{d}%',
+                    position: 'outside',
+                    color: '#333',
+                    fontWeight: 'bold'
                 },
                 labelLine: {
                     show: true,
                     length: 15,
-                    length2: 10
+                    length2: 10,
+                    lineStyle: {
+                        color: '#666',
+                        width: 1
+                    }
                 },
                 emphasis: {
                     label: {
@@ -93,6 +129,7 @@ export default function Pie({domId,title,options=[],answers=[]}) {
             }]
         };
         myChart.setOption(option);
+        
         window.addEventListener('resize', function() {
             myChart.resize();
         });

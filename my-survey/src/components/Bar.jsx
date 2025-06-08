@@ -1,70 +1,40 @@
 import * as echarts from "echarts";
-import {useEffect} from "react";
+import {useEffect, useRef} from "react";
 export default function Bar({domId,title,options=[],answers=[]}) {
+    const chartRef = useRef(null);
+    
     useEffect(() => {
         const sum=new Array(options.length).fill(0);
         answers.forEach(a=>{
             sum[a]++;
         })
-        const data=options.map((option,index)=>({
-            name:option,
-            value:sum[index]
-        }))
+        
         const target=document.getElementById(domId);
         if (!target) {
             return;
         }
-        const myChart = echarts.init(target);
         
-        // 渐变色配置
-        const colorGradients = [];
-        for (let i = 0; i < options.length; i++) {
-            const colorIndex = i % 5;
-            let startColor, endColor;
-            
-            switch (colorIndex) {
-                case 0:
-                    startColor = '#83bff6';
-                    endColor = '#188df0';
-                    break;
-                case 1:
-                    startColor = '#9fe6b8';
-                    endColor = '#1da57a';
-                    break;
-                case 2:
-                    startColor = '#ffdb5c';
-                    endColor = '#ff9f43';
-                    break;
-                case 3:
-                    startColor = '#ff9f9f';
-                    endColor = '#f44336';
-                    break;
-                case 4:
-                    startColor = '#a29bfe';
-                    endColor = '#6c5ce7';
-                    break;
-            }
-            
-            colorGradients.push({
-                type: 'linear',
-                x: 0,
-                y: 0,
-                x2: 0,
-                y2: 1,
-                colorStops: [
-                    { offset: 0, color: startColor },
-                    { offset: 1, color: endColor }
-                ]
-            });
+        if (chartRef.current) {
+            chartRef.current.dispose();
         }
         
+        const myChart = echarts.init(target);
+        chartRef.current = myChart;
+        
+        const colorPalette = [
+            '#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de',
+            '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc', '#4e88b4'
+        ];
+        
         const option = {
+            color: colorPalette,
             title: {
                 text: title,
                 left: "center",
                 textStyle: {
                     fontSize: 16,
-                    fontWeight: 'bold'
+                    fontWeight: 'bold',
+                    color: '#333'
                 },
                 top: 10
             },
@@ -73,40 +43,70 @@ export default function Bar({domId,title,options=[],answers=[]}) {
                 axisPointer: {
                     type: 'shadow'
                 },
-                backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                borderColor: '#ccc',
-                borderWidth: 1,
-                textStyle: {
-                    color: '#333'
-                },
                 formatter: function(params) {
-                    return `${params[0].name}<br/>${params[0].marker} 选择人数: ${params[0].value} (${((params[0].value / answers.length) * 100).toFixed(1)}%)`;
+                    const idx = params[0].dataIndex;
+                    return `${options[idx]}<br/>${params[0].marker} 选择人数: ${params[0].value} (${((params[0].value / answers.length) * 100).toFixed(1)}%)`;
+                }
+            },
+            legend: {
+                type: 'plain',
+                orient: 'vertical',
+                left: 10,
+                top: 'center',
+                itemWidth: 15,
+                itemHeight: 15,
+                itemGap: 10,
+                data: options.map((opt, idx) => {
+                    return {
+                        name: opt,
+                        itemStyle: {
+                            color: colorPalette[idx % colorPalette.length]
+                        }
+                    };
+                }),
+                formatter: function(name) {
+                    const idx = options.findIndex(opt => opt === name);
+                    let displayName = name;
+                    if (displayName.length > 12) {
+                        displayName = displayName.substring(0, 12) + '...';
+                    }
+                    return `${String.fromCharCode(65 + idx)}. ${displayName}`;
                 },
-                extraCssText: 'box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);'
+                textStyle: {
+                    color: '#333',
+                    fontSize: 12
+                },
+                selectedMode: false
             },
             grid: {
-                left: '5%',
+                left: '25%',
                 right: '5%',
-                bottom: '10%',
+                bottom: '15%',
                 top: '20%',
-                containLabel: true
+                containLabel: false
             },
             xAxis: {
                 type: 'category',
-                data: options.map((opt, idx) => String.fromCharCode(65 + idx) + '. ' + opt),
+                data: options.map((_, idx) => String.fromCharCode(65 + idx)),
                 axisLabel: {
                     interval: 0,
-                    rotate: options.length > 5 ? 30 : 0,
+                    rotate: 0,
                     textStyle: {
-                        fontSize: 12
+                        fontSize: 14,
+                        fontWeight: 'bold',
+                        color: '#333'
                     }
                 },
                 axisTick: {
-                    alignWithLabel: true
+                    alignWithLabel: true,
+                    lineStyle: {
+                        color: '#666'
+                    }
                 },
                 axisLine: {
                     lineStyle: {
-                        color: '#ddd'
+                        color: '#666',
+                        width: 2
                     }
                 }
             },
@@ -115,32 +115,44 @@ export default function Bar({domId,title,options=[],answers=[]}) {
                 name: '选择人数',
                 nameTextStyle: {
                     fontSize: 12,
+                    color: '#333',
                     padding: [0, 0, 0, 30]
                 },
                 splitLine: {
                     lineStyle: {
                         type: 'dashed',
-                        color: '#eee'
+                        color: '#aaa'
                     }
                 },
                 axisLine: {
-                    show: false
+                    show: true,
+                    lineStyle: {
+                        color: '#666',
+                        width: 2
+                    }
                 },
                 axisTick: {
-                    show: false
+                    show: true,
+                    lineStyle: {
+                        color: '#666'
+                    }
+                },
+                axisLabel: {
+                    color: '#333'
                 }
             },
             series: [{
                 name: title,
                 type: 'bar',
-                data: sum,
                 barWidth: '40%',
-                itemStyle: {
-                    color: function(params) {
-                        return colorGradients[params.dataIndex % colorGradients.length];
-                    },
-                    borderRadius: [4, 4, 0, 0]
-                },
+                data: sum.map((value, index) => {
+                    return {
+                        value: value,
+                        itemStyle: {
+                            color: colorPalette[index % colorPalette.length]
+                        }
+                    };
+                }),
                 label: {
                     show: true,
                     position: 'top',
@@ -149,6 +161,10 @@ export default function Bar({domId,title,options=[],answers=[]}) {
                             return params.value;
                         }
                         return '';
+                    },
+                    textStyle: {
+                        color: '#333',
+                        fontWeight: 'bold'
                     }
                 },
                 emphasis: {
@@ -157,32 +173,29 @@ export default function Bar({domId,title,options=[],answers=[]}) {
                         shadowOffsetX: 0,
                         shadowColor: 'rgba(0, 0, 0, 0.5)'
                     }
-                },
-                animationDelay: function(idx) {
-                    return idx * 100;
                 }
-            }],
-            animationEasing: 'elasticOut',
-            animationDelayUpdate: function(idx) {
-                return idx * 5;
-            }
-        }
+            }]
+        };
+        
         myChart.setOption(option);
         
-        // 响应式调整
-        window.addEventListener('resize', function() {
+        const resizeHandler = function() {
             myChart.resize();
-        });
+        };
+        
+        window.addEventListener('resize', resizeHandler);
         
         return () => {
-            window.removeEventListener('resize', function() {
-                myChart.resize();
-            });
-            myChart.dispose();
+            window.removeEventListener('resize', resizeHandler);
+            if (chartRef.current) {
+                chartRef.current.dispose();
+            }
         };
     },[domId,title,options,answers])
+    
     return (
-        <div id={domId} style={{ width: '100%', height: '400px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', borderRadius: '8px', padding: '10px' }}></div>
+        <div style={{ width: '100%', position: 'relative' }}>
+            <div id={domId} style={{ width: '100%', height: '400px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', borderRadius: '8px', padding: '10px' }}></div>
+        </div>
     );
-
 }
