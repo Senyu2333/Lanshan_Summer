@@ -1,10 +1,5 @@
 import axios from 'axios'
 axios.defaults.baseURL = 'http://localhost:3000'
-/**
- * 注册
- * @param {{username:string,password:string}} credentials
- * @returns {Promise<{code: 0, data: any} | {code:1, message:string}>}
- */
 export async function register(credentials) {
     const { data: existing } = await axios.get('/users', {
         params: { username: credentials.username }
@@ -18,11 +13,7 @@ export async function register(credentials) {
 
     return { code: 0, data: res.data }
 }
-/**
- * 登录
- * @param {{username:string,password:string}} credentials
- * @returns {Promise<{code:0, data:any} | {code:1, message:string}>}
- */
+
 export async function login(credentials) {
     try {
         const res = await axios.get('/users', {
@@ -39,11 +30,6 @@ export async function login(credentials) {
     }
 }
 
-/**
- * 创建问卷
- * @param {Object} survey  完整的问卷对象
- * @returns {Promise<{code:0,data:any}|{code:1,message:string}>}
- */
 export async function createSurvey(survey) {
     try {
         const res = await axios.post('/surveys', survey);
