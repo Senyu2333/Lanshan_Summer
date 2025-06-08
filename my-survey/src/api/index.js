@@ -35,7 +35,7 @@ export async function login(credentials) {
             return { code: 1, message: '用户名或密码错误' }
         }
     } catch {
-        return { code: 1, message: '登录失败，请重试' }
+        return { code: 1, message: '网络异常，请重试' }
     }
 }
 

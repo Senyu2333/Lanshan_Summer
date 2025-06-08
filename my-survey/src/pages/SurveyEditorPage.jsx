@@ -21,7 +21,9 @@ const SurveyEditorPage = () => {
         if (!title.trim()) return alert("请先输入问卷标题");
         if (questions.length === 0) return alert("请至少添加一道题");
         dispatch(createAsync({ title, questions: questions }))
-            .then(() => navigate('/surveylist'))
+            .then(() =>{
+                alert('创建成功')
+                navigate('/surveylist')})
             .catch(err => {
                 console.error("提交失败", err);
                 alert("创建问卷失败，请重试");

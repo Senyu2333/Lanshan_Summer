@@ -3,12 +3,12 @@ import React from "react";
 export default function MultiChoice({question, onChange, onDelete, viewOnly=false, namePrefix=""}) {
     const handleAnswerChange = (optionIndex) => {
         if (viewOnly) return;
-        
+
         const currentAnswers = Array.isArray(question.answer) ? [...question.answer] : [];
         const newAnswers = currentAnswers.includes(optionIndex)
             ? currentAnswers.filter(a => a !== optionIndex)
             : [...currentAnswers, optionIndex].sort((a, b) => a - b);
-        
+
         onChange({
             ...question,
             answer: newAnswers
@@ -25,8 +25,8 @@ export default function MultiChoice({question, onChange, onDelete, viewOnly=fals
                     gap: '1rem',
                     marginBottom: '1rem'
                 }}>
-                    <textarea 
-                        placeholder="请输入题干信息" 
+                    <textarea
+                        placeholder="请输入题干信息"
                         value={question.title || ''}
                         onChange={e => onChange({...question, title: e.target.value})}
                         style={{
@@ -42,9 +42,9 @@ export default function MultiChoice({question, onChange, onDelete, viewOnly=fals
                             lineHeight: '1.5'
                         }}
                     />
-                    <button 
-                        title="删除此题" 
-                        onClick={onDelete} 
+                    <button
+                        title="删除此题"
+                        onClick={onDelete}
                         type={'button'}
                         style={{
                             padding: '0.5rem',
@@ -65,7 +65,7 @@ export default function MultiChoice({question, onChange, onDelete, viewOnly=fals
                                 textAlign: 'center'
                             }}>{String.fromCharCode(65 + id)}. </span>
 
-                            <input 
+                            <input
                                 type='text'
                                 value={opt}
                                 onChange={e => {
@@ -82,12 +82,12 @@ export default function MultiChoice({question, onChange, onDelete, viewOnly=fals
                                     transition: 'all 0.2s'
                                 }}
                             />
-                            <button 
+                            <button
                                 title='删除选项'
                                 type={'button'}
                                 onClick={() => {
                                     const newOptions = question.options.filter((_, index) => index !== id);
-                                    const newAnswers = Array.isArray(question.answer) 
+                                    const newAnswers = Array.isArray(question.answer)
                                         ? question.answer
                                             .filter(a => a !== id)
                                             .map(a => a > id ? a - 1 : a)
@@ -106,9 +106,9 @@ export default function MultiChoice({question, onChange, onDelete, viewOnly=fals
                             >✖️</button>
                         </div>
                     ))}
-                    <button 
-                        title="增加选项" 
-                        type={'button'} 
+                    <button
+                        title="增加选项"
+                        type={'button'}
                         onClick={() => onChange({...question, options: [...question.options, '']})}
                         style={{
                             marginTop: '0.5rem',
@@ -127,7 +127,6 @@ export default function MultiChoice({question, onChange, onDelete, viewOnly=fals
         );
     }
 
-    // 答题或查看模式
     return (
         <div style={{ margin: '1rem 0' }}>
             <p style={{

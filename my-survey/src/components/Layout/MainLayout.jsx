@@ -19,7 +19,7 @@ const MainLayout = ({ children }) => {
     };
 
     return (
-        <div className="min-h-screen flex flex-col">
+        <div>
             <Header username={user ? user.username : '游客'} onLogout={handleLogout} />
             <div className="flex-grow">
                 {children}

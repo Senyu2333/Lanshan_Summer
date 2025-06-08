@@ -3,7 +3,7 @@ import Helmet from 'react-helmet';
 import Axios from 'axios';
 import { useParams } from 'react-router-dom';
 import Pie from '../components/Pie';
-
+import Bar from '../components/Bar';
 export default function SurveyResultPage() {
     const { id } = useParams();
     const [survey, setSurvey] = useState(null);
@@ -65,7 +65,7 @@ export default function SurveyResultPage() {
                     if (question.type === 'locate') {
                         return `答案${idx + 1}: (经度:${answer.longitude.toFixed(4)}, 纬度:${answer.latitude.toFixed(4)})`;//司马百度地图只有4位精度
                     }
-                    return `${answer}`;
+                    return `答案${idx + 1}: ${answer}`;
                 }).join('\n');
             }
 
@@ -201,13 +201,26 @@ export default function SurveyResultPage() {
                                 border: '1px solid #e5e7eb'
                             }}>
                                 <div style={{color: '#4b5563', marginBottom: '0.5rem'}}>统计结果：</div>
-                                {question.type === 'single' ? (
+                                {question.type === 'single' || question.type === 'score' ? (
                                     <Pie
                                         domId={`pie-chart-${question.id}`}
+                                        options={question.type === 'score' 
+                                            ? Array.from({ length: 11 }, (_, i) => `${i}分`) 
+                                            : question.options}
+                                        answers={survey.results.map(result => {
+                                            const answer = result.answers.find(a => String(a.id) === String(question.id))?.answer;
+                                            return question.type === 'score' ? answer?.[0] : answer;
+                                        }).filter(a => a !== undefined)}
+                                        title={question.title}
+                                    />
+                                ) : question.type === 'multi' ? (
+                                    <Bar
+                                        domId={`bar-chart-${question.id}`}
                                         options={question.options}
-                                        answers={survey.results.map(result => 
-                                            result.answers.find(a => String(a.id) === String(question.id))?.answer
-                                        ).filter(a => a !== undefined)}
+                                        answers={survey.results.flatMap(result => {
+                                            const answer = result.answers.find(a => String(a.id) === String(question.id))?.answer;
+                                            return answer || [];
+                                        })}
                                         title={question.title}
                                     />
                                 ) : (
@@ -222,6 +235,7 @@ export default function SurveyResultPage() {
                                         {calculateResults(question)}
                                     </pre>
                                 )}
+
                             </div>
                         </div>
                     ))}
