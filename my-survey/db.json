@@ -565,6 +565,19 @@
           ]
         }
       ]
+    },
+    {
+      "title": "定位测试",
+      "questions": [
+        {
+          "id": 1749383904149,
+          "type": "locate",
+          "title": "1",
+          "answer": null
+        }
+      ],
+      "creator": "test1",
+      "id": 5
     }
   ]
 }
