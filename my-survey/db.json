@@ -65,6 +65,12 @@
       "password": "123456",
       "token": "rz0ngkmt",
       "id": "lq8Y8SW"
+    },
+    {
+      "username": "test7",
+      "password": "123456",
+      "token": "xvp6w7hk",
+      "id": "WjiIbaU"
     }
   ],
   "surveys": [
@@ -294,6 +300,38 @@
               "answer": {
                 "longitude": 106.61274842448,
                 "latitude": 29.532781337219
+              }
+            }
+          ]
+        },
+        {
+          "user": "test7",
+          "answers": [
+            {
+              "id": "1749367754016",
+              "answer": 4
+            },
+            {
+              "id": "1749367782260",
+              "answer": [
+                3
+              ]
+            },
+            {
+              "id": "1749367845766",
+              "answer": "JQuery"
+            },
+            {
+              "id": "1749367859758",
+              "answer": {
+                "0": 5
+              }
+            },
+            {
+              "id": "1749367878266",
+              "answer": {
+                "longitude": 106.61316712693,
+                "latitude": 29.531308533218
               }
             }
           ]
